@@ -7,7 +7,7 @@
 #include "graphic.hpp"
 
 class Maze{
-	
+private:
 	int m_size;
 	std::vector<std::vector<int>> m_graph;
 	std::deque<std::pair<int,int>> m_que_visit;
@@ -23,6 +23,8 @@ public:
 	void build(int x, int y);
 	// Generate coord of next block
 	bool generate(int &x, int&y);
+	// Display maze 
+	void displayMaze();
 };
 
 #endif 

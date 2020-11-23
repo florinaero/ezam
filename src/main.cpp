@@ -10,14 +10,13 @@ int main (){
 
 	int x=0;
 	int y=0;
-	const int size = 3;
-
+	int size = 0;
+	cout << "Size: "; 
+	cin >> size;
+	
 	Maze maze(size);
 	maze.build(x,y);
-	Graphic graphic(size);
-	graphic.openFile();
-
-	graphic.closeFile();
+	maze.displayMaze();
 	// for (int i=0;i<10;i++){
 	// 	maze.generate(x,y);
 	// }

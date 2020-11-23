@@ -21,37 +21,20 @@ m_graph_out(size)
 // Dctor
 Maze::~Maze(){
 
-	cout << "Walls: \n";
-	for(int i=m_size-1;i>=0;i--){
-		for(int j=0;j<m_size;j++){
-			if(i<m_size-1 && m_graph_out.m_horz_walls[i][j]==1){
-				for(int p=0;p<j;p++){
-					cout << " ";
-				}
-				cout << "-";	
-			}
-			if(j<m_size-1 && m_graph_out.m_vert_walls[i][j]==1){
-				for(int p=0;p<j;p++){
-					cout << " ";
-				}
-				cout << "|";		
-			}
-		}
-		cout << endl;
-	}
-	
+	cout << "Wall: \n";
 	cout << "Vertical:\n";
-	for(int i=m_size-1;i>=0;i--){
-		for(int j=0;j<m_size-1;j++){
-			cout << m_graph_out.m_vert_walls[i][j] << " ";	
+
+	for(int y=m_size-1;y>=0;y--){
+		for(int x=0;x<m_size-1;x++){
+			cout << m_graph_out.m_vert_walls[x][y] << " ";	
 		}
 		cout << endl;
 	}
 
 	cout << "Horizontal:\n";
-	for(int i=m_size-2;i>=0;i--){
-		for(int j=0;j<m_size;j++){
-			cout << m_graph_out.m_horz_walls[i][j] << " ";	
+	for(int y=m_size-2;y>=0;y--){
+		for(int x=0;x<m_size;x++){
+			cout << m_graph_out.m_horz_walls[x][y] << " ";	
 		}
 		cout << endl;
 	}
@@ -85,8 +68,12 @@ void Maze::build(int x, int y){
 		if(m_que_visit.size()>0){
 			x = m_que_visit.back().first;
 			y = m_que_visit.back().second;
-			cout << "GO_BACK:"  <<" x=" << x << " y=" << y << endl;		
+			// cout << "GO_BACK:"  <<" x=" << x << " y=" << y << endl;		
 		}
+	}
+	else{
+		m_graph_out.m_exit.first = x;
+		m_graph_out.m_exit.second = y;
 	}
 	if(m_que_visit.size()>0){
 		build(x,y);
@@ -140,4 +127,10 @@ bool Maze::generate(int &x, int&y){
 		// Is true that it should go back on tree to find a node with unvisited neighbors
 		return true;
 	}
+}
+
+// Display Maze
+void Maze::displayMaze(){
+	m_graph_out.buildDisplay();
+	m_graph_out.display();
 }
