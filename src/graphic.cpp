@@ -1,6 +1,7 @@
 #include "graphic.hpp"
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 Graphic::Graphic(int size):
 m_size(size), 
