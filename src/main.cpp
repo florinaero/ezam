@@ -1,6 +1,7 @@
 #include <iostream>
 #include "graphic.hpp"
 #include "maze.hpp"
+#include <SFML/Network.hpp> 
 
 using namespace std;
 
