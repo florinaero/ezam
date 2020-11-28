@@ -7,6 +7,7 @@
 #include <deque>
 #include "graphic.hpp"
 #include "maze.hpp"
+#include "logging.hpp"
 
 using namespace std;
 
@@ -20,23 +21,24 @@ m_graph_out(size)
 
 // Dctor
 Maze::~Maze(){
+	if(logging::SHOW){
+		cout << "Wall: \n";
+		cout << "Vertical:\n";
 
-	cout << "Wall: \n";
-	cout << "Vertical:\n";
-
-	for(int y=m_size-1;y>=0;y--){
-		for(int x=0;x<m_size-1;x++){
-			cout << m_graph_out.m_vert_walls[x][y] << " ";	
+		for(int y=m_size-1;y>=0;y--){
+			for(int x=0;x<m_size-1;x++){
+				cout << m_graph_out.m_vert_walls[x][y] << " ";	
+			}
+			cout << endl;
 		}
-		cout << endl;
-	}
 
-	cout << "Horizontal:\n";
-	for(int y=m_size-2;y>=0;y--){
-		for(int x=0;x<m_size;x++){
-			cout << m_graph_out.m_horz_walls[x][y] << " ";	
+		cout << "Horizontal:\n";
+		for(int y=m_size-2;y>=0;y--){
+			for(int x=0;x<m_size;x++){
+				cout << m_graph_out.m_horz_walls[x][y] << " ";	
+			}
+			cout << endl;
 		}
-		cout << endl;
 	}
 }
 
@@ -120,7 +122,9 @@ bool Maze::generate(int &x, int&y){
 
 		x = coord.first;
 		y = coord.second;
-		cout << counter++  <<" x=" << x << " y=" << y << endl;
+		if(logging::SHOW){
+			cout << counter++  <<" x=" << x << " y=" << y << endl;
+		}
 		return false;
 	}
 	else{

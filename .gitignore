@@ -2,9 +2,10 @@
 *.out
 *.exe
 *.obj
+*.pdb
+*.ilk
+**/build
 #precompiled headers
 *.gch
 *.o.dSYM
 **/*.out.dSYM
-# Ignore log file for snake
-/snake/log_snake.txt
