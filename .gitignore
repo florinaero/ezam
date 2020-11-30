@@ -9,3 +9,5 @@
 *.gch
 *.o.dSYM
 **/*.out.dSYM
+# ignore dll
+*.dll
