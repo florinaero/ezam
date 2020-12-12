@@ -2,10 +2,9 @@
     "configurations": [
         {
             "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/include",
-                "C:/_Personal/libs/SFML-2.5.1-sources/SFML-2.5.1/include"
-            ],
+            "includePath": ["C:/_Personal/libs/SFML-2.5.1-sources/SFML-2.5.1/include",
+                "${default}",
+                "${workspaceFolder}/include"],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
