@@ -50,7 +50,7 @@ void Graphic::getCoord(int old_x, int old_y, int new_x, int new_y){
 	}
 }
 
-// Build matrices for horizontal and vertical walls
+// Complete matrices for horizontal and vertical walls with the outter edges
 void Graphic::buildDisplay(){
 	// Horizontal
 	for(int x=0;x<m_size;x++){

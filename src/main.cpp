@@ -1,6 +1,7 @@
 #include <iostream>
 #include "graphic.hpp"
 #include "maze.hpp"
+#include "display.hpp"
 
 using namespace std;
 
@@ -11,14 +12,19 @@ int main (){
 	int x=0;
 	int y=0;
 	int size = 0;
+	// std::cout << "Size: "; 
+	// std::cin >> size;	
 	
-	std::cout << "Size: "; 
-	std::cin >> size;
-	
-	Maze maze(size);
-	maze.build(x,y);
-	maze.displayMaze();
+	// Construct render window
+	Display display{800,600};
+	// Start displaying 
+	display.start();
 
-	std::cin.get();
+	if(size>0){
+		Maze maze(size);
+		maze.build(x,y);
+		maze.displayMaze();
+		std::cin.get();
+	}
 	return 0;
 }
