@@ -4,7 +4,7 @@
 *.obj
 *.pdb
 *.ilk
-**/build
+*build*/
 #precompiled headers
 *.gch
 *.o.dSYM

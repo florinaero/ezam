@@ -60,6 +60,8 @@ void Maze::build(int x, int y){
 	old_y = y;
 	// Return new coordinates by reference
 	go_back = generate(x,y);
+	// Store coordinates of visited cells
+	m_coord.push_back(std::make_pair(x,y));
 	// Send old and new coord for graphic display
 	m_graph_out.getCoord(old_x, old_y, x, y);
 
@@ -77,6 +79,7 @@ void Maze::build(int x, int y){
 		m_graph_out.m_exit.first = x;
 		m_graph_out.m_exit.second = y;
 	}
+	// Keep recursion
 	if(m_que_visit.size()>0){
 		build(x,y);
 	}
@@ -137,4 +140,8 @@ bool Maze::generate(int &x, int&y){
 void Maze::displayMaze(){
 	m_graph_out.buildDisplay();
 	m_graph_out.display();
+}
+
+void Maze::getCoord(std::vector<std::pair<int,int>>& coordinates) const{
+	coordinates = m_coord;
 }
