@@ -1,10 +1,16 @@
 #include "display.hpp"
+#include "grid.hpp"
+#include "maze.hpp"
+#include <thread>
+#include <chrono>
 #include <iostream>
 
 Display::Display(unsigned int width, unsigned int height):
 m_width(width),
 m_height(height),
-m_grid(sf::Quads, 8)
+m_input_size(0),
+m_x(0),
+m_y(0)
 {    
     Display::setFont();
 };
@@ -19,8 +25,12 @@ void Display::start(){
     sf::RenderWindow window(sf::VideoMode(m_width, m_height), "ezam", sf::Style::Default, settings);
     Display::setTitle();
     bool title_on = true;    
-    createGrid(0);
-    
+    Grid grid(10, window);
+    Maze maze(1);
+    maze.build(0,0);
+    std::vector<std::pair<int,int>> coord;
+    maze.getCoord(coord);
+
     while (window.isOpen()){
         sf::Event event;
         sf::Text size_text;            
@@ -43,17 +53,25 @@ void Display::start(){
                 } 
             }
         }
-        
-        MyDrawable myDraw;
-        window.draw(myDraw);
+ 
         window.clear(sf::Color::Cyan);
-        // Display title page
+        // Display title page 
         for(auto& elem : m_frames){
             if(elem.second.first==true)
             window.draw(elem.second.second);
         }
-        if(m_frames.at("title").first == false){
-            window.draw(m_grid);
+        // Start drawing after displaying title page
+        if(m_frames.at("title").first == false){    
+            static int counter = 0;
+            std::cout << "size = " << coord.size() << std::endl;
+            if(counter<coord.size()){                                
+                auto coord_pair = coord.at(counter);
+                counter++;         
+                std::cout << "x=" << coord_pair.first << " y=" << coord_pair.second << std::endl;
+                grid.moveHead(coord_pair.first,coord_pair.second);
+                std::this_thread::sleep_for(std::chrono::milliseconds{100});        
+                window.draw(grid);
+            }
         }
         window.display();
     }
@@ -97,21 +115,10 @@ bool Display::isMouseOnArea(const sf::RenderWindow& window, const sf::FloatRect&
     }
 }
 
-void Display::createGrid(int size){
-
-    m_grid[0].position = sf::Vector2f(10.f, 10.f);
-    m_grid[1].position = sf::Vector2f(110.f, 10.f);
-    m_grid[2].position = sf::Vector2f(110.f, 110.f);
-    m_grid[3].position = sf::Vector2f(10.f, 110.f);
-
-    
-    m_grid[4].position = sf::Vector2f(110.f, 10.f);
-    m_grid[5].position = sf::Vector2f(220.f, 10.f);
-    m_grid[6].position = sf::Vector2f(220.f, 110.f);
-    m_grid[7].position = sf::Vector2f(110.f, 110.f);
-
-    for(int i=0;i<8;i++){
-        m_grid[i].color = sf::Color::Red;
-    }
+void Display::setCoord(const int x, const int y){
+    m_x = x;
+    m_y = y; 
 }
+
+
 

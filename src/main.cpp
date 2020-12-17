@@ -11,9 +11,9 @@ int main (){
 
 	int x=0;
 	int y=0;
-	int size = 0;
-	// std::cout << "Size: "; 
-	// std::cin >> size;	
+	int size = 1;
+	std::cout << "Size: "; 
+	std::cin >> size;	
 	
 	// Construct render window
 	Display display{800,600};
