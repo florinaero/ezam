@@ -3,6 +3,7 @@
 
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
+#include <deque>
 
 class Grid : public sf::Drawable
 {
@@ -15,27 +16,39 @@ public:
 private:
     // Create grid based on window dimenssions
     void createGrid();
+    // Create walls based on widnow dimenssions
+    void createWalls(); 
+
     void setSize(const int size);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
     {           
-        // You can draw other high-level objects
-        target.draw(m_quad, states);
         // ... or use the low-level API
         states.texture = &m_texture;
-        target.draw(m_vertices, states);
+        // Draw grid
+        target.draw(m_quads, states);
+        target.draw(m_v_walls, states);
+        target.draw(m_h_walls, states);
+        // Draw head
+        target.draw(m_head_q, states);
         // ... or draw with OpenGL directly
     }
     
-    sf::VertexArray m_grid;
-    sf::VertexArray m_quad;
+    sf::VertexArray m_quads;
+    sf::VertexArray m_v_walls;
+    sf::VertexArray m_h_walls;
+    sf::VertexArray m_head_q;
     sf::Sprite m_sprite;
     sf::Texture m_texture;
     sf::VertexArray m_vertices;
+    std::deque<sf::Vertex> m_seen_q; // Seen quads by head 
     const sf::RenderWindow& m_window;
     int m_size;
     int m_sqr_w; // square width
     int m_sqr_h; // square height
+    int m_old_x; 
+    int m_old_y; 
+    static inline const int q_s = 4; // number of lines for one quad
 };
 
 #endif

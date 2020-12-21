@@ -1,12 +1,13 @@
 
 IDIR = include/
+SFMLDIR = C:/_Personal/libs/gcc/SFML-2.5.1/include
 SRCDIR = src/
 DEPS := $(wildcard $(IDIR)*.hpp) #find hpp files
 CSRC := $(wildcard $(SRCDIR)*.cpp) #find all cpp files
-LIBS := -lncurses
+LIBS := -L C:/_Personal/libs/gcc/SFML-2.5.1/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 CC=g++
-CFLAGS=-I $(IDIR) -std=c++17 -g -W
+CFLAGS=-I $(IDIR) -I $(SFMLDIR) -std=c++17 -g -W
 EXSRC = $(shell if [ ! -d "$(SRCDIR)" ]; then echo "Must create src directory!" ; fi)
 EXOBJ = $(shell if [ ! -d "$(ODIR)" ]; then mkdir $(ODIR) && echo "obj dir created" ; fi)
 EXINCL = $(shell if [ ! -d "$(IDIR)" ]; then echo "Must create include directory!" ; fi)
