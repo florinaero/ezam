@@ -1,30 +1,30 @@
 #include <iostream>
 #include "graphic.hpp"
 #include "maze.hpp"
-#include "display.hpp"
+#include "control.hpp"
 
 using namespace std;
 
 int main (){
 
 	std::cout << "Maze generator: Randomized depth-first search." << endl;
+	int size = 20;
+	int x=size/2;
+	int y=size/2;
+	std::cout << "Size: " << std::endl; 
+	// std::cin >> size;	
 
-	int x=0;
-	int y=0;
-	int size = 1;
-	std::cout << "Size: "; 
-	std::cin >> size;	
-	
 	// Construct render window
-	Display display{800,600};
+	Control product{800, 800, size};
+	product.setStart(x,y);
 	// Start displaying 
-	display.start();
+	product.run();
 
 	if(size>0){
 		Maze maze(size);
 		maze.build(x,y);
 		maze.displayMaze();
-		std::cin.get();
+		// std::cin.get();
 	}
 	return 0;
 }

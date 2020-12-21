@@ -5,7 +5,6 @@
 #include <utility>
 #include <deque>
 #include "graphic.hpp"
-#include "display.hpp"
 
 class Maze{
 private:
