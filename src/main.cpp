@@ -8,10 +8,10 @@ using namespace std;
 int main (){
 
 	std::cout << "Maze generator: Randomized depth-first search." << endl;
-	int size = 20;
+	int size = 40;
 	int x=size/2;
 	int y=size/2;
-	std::cout << "Size: " << std::endl; 
+	std::cout << "Size: " << size << std::endl; 
 	// std::cin >> size;	
 
 	// Construct render window
@@ -22,7 +22,7 @@ int main (){
 
 	if(size>0){
 		Maze maze(size);
-		maze.build(x,y);
+		maze.buildDFS(x,y);
 		maze.displayMaze();
 		// std::cin.get();
 	}

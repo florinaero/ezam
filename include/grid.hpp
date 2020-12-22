@@ -46,6 +46,7 @@ private:
     int m_size;
     int m_sqr_w; // square width
     int m_sqr_h; // square height
+    int m_thick;
     int m_old_x; 
     int m_old_y; 
     static inline const int q_s = 4; // number of lines for one quad

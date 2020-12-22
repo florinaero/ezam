@@ -12,3 +12,4 @@
 # ignore dll
 *.dll
 /Default/
+*.idb

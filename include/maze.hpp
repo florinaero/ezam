@@ -19,8 +19,8 @@ public:
 	Maze(int size);
 	// Dctor
 	~Maze();
-	// Build maze based on deep first search using recursion
-	void build(int x, int y);
+	// Build maze based on depth first search using recursion
+	void buildDFS(int x, int y);
 	// Generate coord of next block
 	bool generate(int &x, int&y);
 	// Display maze 

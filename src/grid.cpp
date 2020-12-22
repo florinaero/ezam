@@ -31,7 +31,7 @@ void Grid::createGrid(){
         m_quads[cnt+1].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y);         // top-right
         m_quads[cnt+2].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y+m_sqr_h); // bottom-right
         m_quads[cnt+3].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y+m_sqr_h);         // bottom-left
-        m_quads[cnt].color   = sf::Color::Black;
+        m_quads[cnt].color   = sf::Color::Yellow;
         m_quads[cnt+1].color = sf::Color::Yellow;
         m_quads[cnt+2].color = sf::Color::Black;
         m_quads[cnt+3].color = sf::Color::Yellow;
@@ -40,27 +40,26 @@ void Grid::createGrid(){
 }
 
 void Grid::createWalls(){
-    sf::Color color_wall = sf::Color::Black;
-    int thick = 0.2 * m_sqr_w;
-    int space = m_sqr_w - thick;
+    sf::Color color_wall = sf::Color::Black;    
+    int space = m_sqr_w - m_thick;
     int cnt = 0;
     for(int i=0;i<(m_size+1)*m_size;i++){
         int x = i%m_size;   // count on line
         int y = i/m_size;   // count on column
         // Vertical walls
         m_v_walls[cnt].position   = sf::Vector2f(m_sqr_w*x, m_sqr_h*y);               // top-left
-        m_v_walls[cnt+1].position = sf::Vector2f(m_sqr_w*x+thick, m_sqr_h*y);         // top-right
-        m_v_walls[cnt+2].position = sf::Vector2f(m_sqr_w*x+thick, m_sqr_h*y+m_sqr_h+thick); // bottom-right
-        m_v_walls[cnt+3].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y+m_sqr_h+thick);       // bottom-left
+        m_v_walls[cnt+1].position = sf::Vector2f(m_sqr_w*x+m_thick, m_sqr_h*y);         // top-right
+        m_v_walls[cnt+2].position = sf::Vector2f(m_sqr_w*x+m_thick, m_sqr_h*y+m_sqr_h+m_thick); // bottom-right
+        m_v_walls[cnt+3].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y+m_sqr_h+m_thick);       // bottom-left
         m_v_walls[cnt].color   = color_wall;
         m_v_walls[cnt+1].color = color_wall;
         m_v_walls[cnt+2].color = color_wall;
         m_v_walls[cnt+3].color = color_wall;
         // Horizontal walls
         m_h_walls[cnt].position   = sf::Vector2f(m_sqr_w*x, m_sqr_h*y);               // top-left
-        m_h_walls[cnt+1].position = sf::Vector2f(m_sqr_w*x+m_sqr_w+thick, m_sqr_h*y);       // top-right
-        m_h_walls[cnt+2].position = sf::Vector2f(m_sqr_w*x+m_sqr_w+thick, m_sqr_h*y+thick); // bottom-right
-        m_h_walls[cnt+3].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y+thick);         // bottom-left
+        m_h_walls[cnt+1].position = sf::Vector2f(m_sqr_w*x+m_sqr_w+m_thick, m_sqr_h*y);       // top-right
+        m_h_walls[cnt+2].position = sf::Vector2f(m_sqr_w*x+m_sqr_w+m_thick, m_sqr_h*y+m_thick); // bottom-right
+        m_h_walls[cnt+3].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y+m_thick);         // bottom-left
         m_h_walls[cnt].color   = color_wall;
         m_h_walls[cnt+1].color = color_wall;
         m_h_walls[cnt+2].color = color_wall;
@@ -72,6 +71,7 @@ void Grid::createWalls(){
 void Grid::setSize(const int size){
     m_sqr_w = static_cast<int>(m_window.getSize().x / size);
     m_sqr_h = static_cast<int>(m_window.getSize().y / size);
+    m_thick = 0.5 * m_sqr_w;
     std::cout << "m_sqr_w = " << m_sqr_w << " m_sqr_h= " << m_sqr_h << std::endl;
 }
 
@@ -79,10 +79,10 @@ void Grid::moveHead(const int x, const int y){
     // @todo: Check why this color is not working and lines are not dashed 
     sf::Color color_bgr = sf::Color(1,1,1,1);//sf::Color::Green;
     // Map coordinates with window's size 
-    m_head_q[0].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y);
-    m_head_q[1].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y);
+    m_head_q[0].position = sf::Vector2f(m_sqr_w*x+m_thick, m_sqr_h*y+m_thick);
+    m_head_q[1].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y+m_thick);
     m_head_q[2].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y+m_sqr_h);
-    m_head_q[3].position = sf::Vector2f(m_sqr_w*x, m_sqr_h*y+m_sqr_h);            
+    m_head_q[3].position = sf::Vector2f(m_sqr_w*x+m_thick, m_sqr_h*y+m_sqr_h);            
     
     int cnt = y*m_size*q_s + x*q_s; // index based on coordinates
     for(int i=0;i<q_s;i++){
