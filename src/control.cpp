@@ -15,7 +15,7 @@ m_start_y(0)
 {   
     //  NEVER use together setVerticalSyncEnabled() with setFramerateLimit()
     // m_window.setVerticalSyncEnabled(true); 
-    m_window.setFramerateLimit(60);
+    // m_window.setFramerateLimit(60);
     Control::setFont();
 };
 
@@ -24,7 +24,7 @@ void Control::setInputSize(int size) {
 }
 void Control::initialize(){
     // Build maze
-    m_maze.build(m_start_x, m_start_y);
+    m_maze.buildDFS(m_start_x, m_start_y);
 }
 
 void Control::setStart(int x, int y){
@@ -43,6 +43,7 @@ void Control::run(){
         sf::Text size_text;            
         size_text.setCharacterSize(50);
         static sf::String size_input;     
+        sf::Clock clock;
 
         while (m_window.pollEvent(event)){
             if (event.type == sf::Event::Closed){
@@ -72,8 +73,11 @@ void Control::run(){
         }
         
         if(is_running){
-            m_window.display();
-            m_window.clear(sf::Color::Cyan);
+            m_window.display(); 
+            m_window.clear(sf::Color::Cyan);         
+            sf::Time time = clock.getElapsedTime();
+            std::cout << "fps: " << 1.0f/time.asSeconds() << std::endl;
+            clock.restart();  
         }
         else{
             // Avoid clearing
@@ -124,7 +128,7 @@ void Control::setTitle() {
 }
 
 bool Control::setFont(){
-    if(m_font.loadFromFile("config\\fonts\\MAIAN.tff")!=true){
+    if(m_font.loadFromFile("C:\\_Personal\\repo\\ezam\\config\\fonts\\MAIAN.tff")!=true){
         std::cout << "Error in loading font" << std::endl;
         return false;
     }

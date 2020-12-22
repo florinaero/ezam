@@ -42,8 +42,8 @@ Maze::~Maze(){
 	}
 }
 
-// Build maze based on deep first search using recursion
-void Maze::build(int x, int y){
+// Build maze based on deppth first search using recursion
+void Maze::buildDFS(int x, int y){
 	bool go_back = false;
 	int old_x = 0;
 	int old_y = 0;
@@ -58,16 +58,16 @@ void Maze::build(int x, int y){
 	// Store old coordinates for graphic usage
 	old_x = x;
 	old_y = y;
+	// Store coordinates of visited cells before generating others
+	m_coord.push_back(std::make_pair(x,y));
 	// Return new coordinates by reference
 	go_back = generate(x,y);
-	// Store coordinates of visited cells
-	m_coord.push_back(std::make_pair(x,y));
 	// Send old and new coord for graphic display
 	m_graph_out.getCoord(old_x, old_y, x, y);
 
 	// Pop last visited node
 	if(go_back){
-		// Last element is the one that has no unvisted neighbors
+		// Last element is the one that has zero unvisted neighbors
 		m_que_visit.pop_back();
 		if(m_que_visit.size()>0){
 			x = m_que_visit.back().first;
@@ -81,7 +81,7 @@ void Maze::build(int x, int y){
 	}
 	// Keep recursion
 	if(m_que_visit.size()>0){
-		build(x,y);
+		buildDFS(x,y);
 	}
 }
 
