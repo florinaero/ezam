@@ -31,9 +31,13 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$msCompile"
-            ],
+            "problemMatcher": {
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}/"
+                ],
+                "base": "$msCompile"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true

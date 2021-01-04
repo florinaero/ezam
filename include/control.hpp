@@ -36,7 +36,6 @@ private:
     void setTitle();
     // Set font 
     bool setFont();
-    void createGrid(int size);
     void initialize();
 };
 

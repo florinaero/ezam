@@ -1,6 +1,7 @@
 #include "control.hpp"
 #include "grid.hpp"
 #include "maze.hpp"
+#include "kruskal.hpp"
 #include <thread>
 #include <chrono>
 #include <iostream>
@@ -9,13 +10,14 @@ Control::Control(int width_win, int height_win, int size):
 m_window(sf::VideoMode(width_win, height_win), "ezam", sf::Style::Default),
 m_maze(size),
 m_grid(size, m_window),
-m_input_size(0),
+m_input_size(size),
 m_start_x(0),
 m_start_y(0)
 {   
     //  NEVER use together setVerticalSyncEnabled() with setFramerateLimit()
     // m_window.setVerticalSyncEnabled(true); 
     // m_window.setFramerateLimit(60);
+    m_window.setPosition(sf::Vector2i(0, 0));   // top-left
     Control::setFont();
 };
 
@@ -33,10 +35,13 @@ void Control::setStart(int x, int y){
 }
 
 void Control::run(){
-    setTitle();
-    Control::initialize();
     bool title_on = true;        
     static bool is_running = true;
+    bool is_krusk_running = true;
+    Kruskal krusk(m_input_size,m_input_size);
+
+    setTitle();
+    Control::initialize();
 
     while (m_window.isOpen()){
         sf::Event event;
@@ -69,14 +74,17 @@ void Control::run(){
         }
         // Start drawing after displaying title page
         if(m_frames.at("title").first == false){
-            is_running = Control::showMaze();                
+            // is_running = Control::showMaze(); 
+            if(is_krusk_running){               
+                is_krusk_running = krusk.display(m_window);
+            }
         }
         
-        if(is_running){
+        if(is_running&&is_krusk_running){
             m_window.display(); 
             m_window.clear(sf::Color::Cyan);         
             sf::Time time = clock.getElapsedTime();
-            std::cout << "fps: " << 1.0f/time.asSeconds() << std::endl;
+            // std::cout << "fps: " << 1.0f/time.asSeconds() << std::endl;
             clock.restart();  
         }
         else{
