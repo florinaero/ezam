@@ -23,15 +23,14 @@ m_graph_out(size)
 Maze::~Maze(){
 	if(logging::SHOW){
 		cout << "Wall: \n";
-		cout << "Vertical:\n";
 
+		cout << "Vertical:\n";
 		for(int y=m_size-1;y>=0;y--){
 			for(int x=0;x<m_size-1;x++){
 				cout << m_graph_out.m_vert_walls[x][y] << " ";	
 			}
 			cout << endl;
 		}
-
 		cout << "Horizontal:\n";
 		for(int y=m_size-2;y>=0;y--){
 			for(int x=0;x<m_size;x++){
@@ -83,6 +82,12 @@ void Maze::buildDFS(int x, int y){
 	if(m_que_visit.size()>0){
 		buildDFS(x,y);
 	}
+}
+
+
+// Build maze using randomized Kruskal's algorithm
+void buildKruskal(int x, int y){
+
 }
 
 // Generate coord of next block
