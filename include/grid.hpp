@@ -42,9 +42,10 @@ private:
         // ... or use the low-level API
         states.texture = &m_texture;
         // Draw grid        
-        target.draw(m_quads, states);        
+        target.draw(m_quads, states);                        
         target.draw(m_v_walls, states);
         target.draw(m_h_walls, states);
+        target.draw(m_removed_walls, states);
         target.draw(m_outline, states);
         // Draw head
         target.draw(m_head_q, states);
@@ -55,6 +56,7 @@ private:
     sf::VertexArray m_quads;
     sf::VertexArray m_v_walls;
     sf::VertexArray m_h_walls;
+    sf::VertexArray m_removed_walls;
     sf::VertexArray m_head_q;
     sf::Sprite m_sprite;
     sf::Texture m_texture;

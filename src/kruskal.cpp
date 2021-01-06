@@ -112,8 +112,11 @@ bool Kruskal::display(sf::RenderWindow& window){
     Grid grid(m_lines, window);
     std::vector<std::pair<int,int>>::const_iterator it;
     sf::Event event;
+    int counter = 0;
+    std::cout << "NOdes: " << m_tree.size() << std::endl;
 
-    for( it=m_tree.begin();it!=m_tree.end();++it){
+    for(it=m_tree.begin();it!=m_tree.end();++it){
+        counter++;
         // Watch for events
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed){
@@ -121,18 +124,20 @@ bool Kruskal::display(sf::RenderWindow& window){
             }
         }
         // markCells(it->first, it->second, sf::Color::Red, grid);
-        // // grid.removeWall(it->first, it->second, sf::Color::Red);
+        grid.removeWall(it->first, it->second, sf::Color::Green);
+        markCells(it->first, it->second, sf::Color::Red, grid);
         // markWall(it->first, it->second, sf::Color::Blue, grid);
-        // window.draw(grid); 
-        // window.display();
-        // std::this_thread::sleep_for(std::chrono::milliseconds{200}); 
-          
-        markCells(it->first, it->second, sf::Color::Green, grid);
-        markWall(it->first, it->second, sf::Color::Green, grid);
         window.draw(grid); 
         window.display();
-        // std::this_thread::sleep_for(std::chrono::milliseconds{200}); 
+        // std::this_thread::sleep_for(std::chrono::milliseconds{100}); 
+          
+        markCells(it->first, it->second, sf::Color::Green, grid);
+        // markWall(it->first, it->second, sf::Color::Green, grid);
+        window.draw(grid); 
+        window.display();
+        // std::this_thread::sleep_for(std::chrono::milliseconds{100}); 
     }
+    std::cout << counter << std::endl;
     return false;
 }
 
