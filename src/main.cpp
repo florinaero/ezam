@@ -9,7 +9,7 @@ using namespace std;
 int main (){
 
 	std::cout << "Maze generator: Randomized depth-first search." << endl;
-	int size = 25;
+	int size = 30;
 	int x=size/2;
 	int y=size/2;
 	
