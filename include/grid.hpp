@@ -13,11 +13,13 @@ public:
     // Map coordinates to window size 
     void moveHead(const int x, const int y);
     // Set quads color based on grid coordinates
-    void setColorQuad(const int x, const int y, const sf::Color& color_code);
-    // Set vertical wall color based on grid coordinates
-    void setColorWallVert(const int cell_1, const int cell_2, const sf::Color& color_code);
-    // Set horizontal wall color based on grid coordinates
-    void setColorWallHorz(const int cell_1, const int cell_2, const sf::Color& color_code);
+    void setColorQuad(const int x, const int y, const sf::Color color_code);
+    // Set color for all quads
+    void setColorAllQuads(const sf::Color color_code);    
+    // Set vertical wall color based on index from left to right
+    void setColorWallVert(const int index, const sf::Color& color_code);
+    // Set horizontal wall color based on index from up to bottom
+    void setColorWallHorz(const int index, const sf::Color& color_code);
     // Remove wall between 2 adjacent cells on horizontal or vertical
     void removeWall(const int cell_1, const int cell_2, sf::Color color);
     ~Grid();
@@ -26,6 +28,14 @@ public:
     int m_sqr_w; // square width
     int m_sqr_h; // square height
     int m_outline_w; // outline width
+    sf::VertexArray m_outline;
+    sf::VertexArray m_quads;
+    sf::VertexArray m_v_walls;
+    sf::VertexArray m_h_walls;
+    sf::VertexArray m_row_walls;
+    sf::VertexArray m_col_walls;
+    sf::VertexArray m_removed_walls;
+    sf::VertexArray m_head_q;
 
 private:
     // Create window's outlien based on window dimenssions
@@ -43,24 +53,17 @@ private:
         states.texture = &m_texture;
         // Draw grid        
         target.draw(m_quads, states);                        
-        target.draw(m_v_walls, states);
-        target.draw(m_h_walls, states);
+        target.draw(m_row_walls, states);
+        target.draw(m_col_walls, states);
         target.draw(m_removed_walls, states);
         target.draw(m_outline, states);
         // Draw head
         target.draw(m_head_q, states);
         // ... or draw with OpenGL directly
     }
-    
-    sf::VertexArray m_outline;
-    sf::VertexArray m_quads;
-    sf::VertexArray m_v_walls;
-    sf::VertexArray m_h_walls;
-    sf::VertexArray m_removed_walls;
-    sf::VertexArray m_head_q;
+        
     sf::Sprite m_sprite;
     sf::Texture m_texture;
-    sf::VertexArray m_vertices;
     std::deque<sf::Vertex> m_seen_q; // Seen quads by head 
     const sf::RenderWindow& m_window;
     int m_size;

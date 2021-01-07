@@ -5,6 +5,7 @@
 #include <utility>
 #include <map>
 #include <deque>
+#include <thread>
 #include "graphic.hpp"
 #include "maze.hpp"
 #include "logging.hpp"
@@ -17,6 +18,7 @@ m_size(size),
 m_graph(size, vector<int>(size, 0)), 
 m_graph_out(size)
 {
+	this->buildDFS(0,0);
 };
 
 // Dctor
@@ -149,4 +151,38 @@ void Maze::displayMaze(){
 
 void Maze::getCoord(std::vector<std::pair<int,int>>& coordinates) const{
 	coordinates = m_coord;
+}
+
+bool Maze::display(sf::RenderWindow& window) const{
+	static int counter = 0;
+    bool is_running = false;
+
+	window.draw(*this);
+    // if(counter<m_coord.size()){                                
+    //     auto coord_pair = m_coord.at(counter);
+    //     counter++;         
+    //     // std::cout << "x=" << coord_pair.first << " y=" << coord_pair.second << std::endl;
+    //     m_grid.moveHead(coord_pair.first,coord_pair.second);
+    //     std::this_thread::sleep_for(std::chrono::milliseconds{10});        
+    //     m_window.draw(m_grid);
+    //     is_running = true;
+    // }
+    // else{
+    //     is_running = false;
+    // }
+    return is_running;
+}
+
+void Maze::setGrid(Grid* grid){
+    m_grid = grid;
+}
+
+void Maze::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+    // Draw grid        
+    target.draw(m_grid->m_quads, states);                        
+    target.draw(m_grid->m_row_walls, states);
+    target.draw(m_grid->m_col_walls, states);
+	target.draw(m_grid->m_head_q, states);
+    target.draw(m_grid->m_outline, states);
+    // ... or draw with OpenGL directly
 }
