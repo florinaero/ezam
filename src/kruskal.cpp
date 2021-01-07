@@ -108,15 +108,12 @@ std::vector<std::pair<int,int>> Kruskal::getTree() const {
     return m_tree;
 }
 
-bool Kruskal::display(sf::RenderWindow& window){
+bool Kruskal::display(sf::RenderWindow& window) {
     Grid grid(m_lines, window);
     std::vector<std::pair<int,int>>::const_iterator it;
     sf::Event event;
-    int counter = 0;
-    std::cout << "NOdes: " << m_tree.size() << std::endl;
-
+    
     for(it=m_tree.begin();it!=m_tree.end();++it){
-        counter++;
         // Watch for events
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed){
@@ -124,60 +121,31 @@ bool Kruskal::display(sf::RenderWindow& window){
             }
         }
         // markCells(it->first, it->second, sf::Color::Red, grid);
-        grid.removeWall(it->first, it->second, sf::Color::Green);
-        markCells(it->first, it->second, sf::Color::Red, grid);
-        // markWall(it->first, it->second, sf::Color::Blue, grid);
-        window.draw(grid); 
+        m_grid->removeWall(it->first, it->second, sf::Color::Green);
+        markCells(it->first, it->second, sf::Color::Red, m_grid);
+        window.draw(*this); 
+        
         window.display();
-        // std::this_thread::sleep_for(std::chrono::milliseconds{100}); 
+        std::this_thread::sleep_for(std::chrono::milliseconds{30}); 
           
-        markCells(it->first, it->second, sf::Color::Green, grid);
-        // markWall(it->first, it->second, sf::Color::Green, grid);
-        window.draw(grid); 
+        markCells(it->first, it->second, sf::Color::Green, m_grid);
+        window.draw(*this); 
         window.display();
-        // std::this_thread::sleep_for(std::chrono::milliseconds{100}); 
+        std::this_thread::sleep_for(std::chrono::milliseconds{30}); 
     }
-    std::cout << counter << std::endl;
     return false;
 }
 
-void Kruskal::markCells(int cell_1, int cell_2,sf::Color color, Grid& grid){
+void Kruskal::markCells(int cell_1, int cell_2,sf::Color color, Grid* grid){
     int x = cell_1 % m_lines; // line's index
     int y = cell_1 / m_lines; // column's index
-    grid.setColorQuad(x,y,color);
+    grid->setColorQuad(x,y,color);
     
     x = cell_2 % m_lines; // line's index
     y = cell_2 / m_lines; // column's index
-    grid.setColorQuad(x,y,color);
+    grid->setColorQuad(x,y,color);
 }
 
-void Kruskal::markWall(int cell_1, int cell_2,sf::Color color, Grid& grid){
-    // Find if is horz or vertical wall between cells by checking
-    // delta of 1 for horizontal cells(vert wall) and 
-    // larger than 1 for vertical cells(horz wall) 
-    if(cell_2-cell_1==1){
-        grid.setColorWallVert(cell_1,cell_2,color);
-    }
-    if(cell_2-cell_1>1){
-        grid.setColorWallHorz(cell_1,cell_2,color);
-    }
-}
-
-void Kruskal::setQuad(int idx, int width, int height){    
-    int x = idx % m_lines; // line's index
-    int y = idx / m_lines; // column's index
-    int cnt = y*m_lines*Grid::q_s + x*Grid::q_s; // index based on coordinates
-    
-    sf::VertexArray cell(sf::Quads, Grid::q_s); 
-    cell[0] = sf::Vector2f(x*width, y*height);
-    cell[1] = sf::Vector2f(x*width + width, y*height);
-    cell[2] = sf::Vector2f(x*width + width, y*height + height);
-    cell[3] = sf::Vector2f(x*width, y*height + height);
-    
-    for(int i=0;i<cell.getVertexCount();i++){
-        cell[i].color = sf::Color::Magenta;    
-    }
-}
 
 // DEBUG content
 // Show visited wall and cells
@@ -197,5 +165,19 @@ void Kruskal::showWalls(){
             std::cout << "cell1: " << i.first << " cell2: " << i.second << std::endl;
         }
     }
+}
+
+void Kruskal::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+    // Draw grid        
+    target.draw(m_grid->m_quads, states);                        
+    target.draw(m_grid->m_row_walls, states);
+    target.draw(m_grid->m_col_walls, states);
+    target.draw(m_grid->m_removed_walls, states);
+    target.draw(m_grid->m_outline, states);
+    // ... or draw with OpenGL directly
+}
+
+void Kruskal::setGrid(Grid* grid){
+    m_grid = grid;
 }
 

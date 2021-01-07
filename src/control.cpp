@@ -8,16 +8,14 @@
 
 Control::Control(int width_win, int height_win, int size):
 m_window(sf::VideoMode(width_win, height_win), "ezam", sf::Style::Default),
-m_maze(size),
 m_grid(size, m_window),
-m_input_size(size),
-m_start_x(0),
-m_start_y(0)
+m_input_size(size)
 {   
     //  NEVER use together setVerticalSyncEnabled() with setFramerateLimit()
     // m_window.setVerticalSyncEnabled(true); 
     // m_window.setFramerateLimit(60);
-    m_window.setPosition(sf::Vector2i(0, 0));   // top-left
+    m_window.setPosition(sf::Vector2i(1400, -1080));
+    // m_window.setPosition(sf::Vector2i(0, 0));   // top-left
     Control::setFont();
 };
 
@@ -25,13 +23,7 @@ void Control::setInputSize(int size) {
     m_input_size = size;
 }
 void Control::initialize(){
-    // Build maze
-    m_maze.buildDFS(m_start_x, m_start_y);
-}
-
-void Control::setStart(int x, int y){
-    m_start_x = x;
-    m_start_y = y;
+    // empty
 }
 
 void Control::run(){
@@ -39,6 +31,10 @@ void Control::run(){
     static bool is_running = true;
     bool is_krusk_running = true;
     Kruskal krusk(m_input_size,m_input_size);
+    Maze maze(m_input_size);
+    Grid grid(m_input_size, m_window);
+    krusk.setGrid(&grid);
+    maze.setGrid(&grid);
 
     setTitle();
     Control::initialize();
@@ -73,14 +69,19 @@ void Control::run(){
             m_window.draw(elem.second.second);
         }
         // Start drawing after displaying title page
-        if(m_frames.at("title").first == false){
-            // is_running = Control::showMaze(); 
+        if(m_frames.at("title").first == false){            
             if(is_krusk_running){               
                 is_krusk_running = krusk.display(m_window);
             }
         }
-        
-        if(is_running&&is_krusk_running){
+        // Showing maze with DFS
+        if(is_krusk_running==false){
+            grid.setColorAllQuads(sf::Color::Red);
+            maze.display(m_window);
+            m_window.display();
+        }
+
+        if(is_running&&is_krusk_running){            
             m_window.display(); 
             m_window.clear(sf::Color::Cyan);         
             sf::Time time = clock.getElapsedTime();
@@ -95,24 +96,24 @@ void Control::run(){
 
 // Create display content for maze coordinates
 bool Control::showMaze(){
-    std::vector<std::pair<int,int>> coord;
-    m_maze.getCoord(coord);
-    static int counter = 0;
-    bool is_running = false;
+    // std::vector<std::pair<int,int>> coord;
+    // m_maze.getCoord(coord);
+    // static int counter = 0;
+    // bool is_running = false;
 
-    if(counter<coord.size()){                                
-        auto coord_pair = coord.at(counter);
-        counter++;         
-        // std::cout << "x=" << coord_pair.first << " y=" << coord_pair.second << std::endl;
-        m_grid.moveHead(coord_pair.first,coord_pair.second);
-        std::this_thread::sleep_for(std::chrono::milliseconds{10});        
-        m_window.draw(m_grid);
-        is_running = true;
-    }
-    else{
-        is_running = false;
-    }
-    return is_running;
+    // if(counter<coord.size()){                                
+    //     auto coord_pair = coord.at(counter);
+    //     counter++;         
+    //     // std::cout << "x=" << coord_pair.first << " y=" << coord_pair.second << std::endl;
+    //     m_grid.moveHead(coord_pair.first,coord_pair.second);
+    //     std::this_thread::sleep_for(std::chrono::milliseconds{10});        
+    //     m_window.draw(m_grid);
+    //     is_running = true;
+    // }
+    // else{
+    //     is_running = false;
+    // }
+    return false;
 }
 
 void Control::setTitle() {

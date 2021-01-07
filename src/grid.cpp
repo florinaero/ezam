@@ -10,7 +10,9 @@ m_outline(sf::Quads, 4*Grid::q_s),
 m_quads(sf::Quads, size*size*Grid::q_s),
 m_no_walls(size*(size-1)),  // Total walls on vertical/horizontal
 m_v_walls(sf::Quads, 0),
-m_h_walls(sf::Quads, 0),    
+m_h_walls(sf::Quads, 0),
+m_row_walls(sf::Quads, (size-1)*Grid::q_s),    
+m_col_walls(sf::Quads, (size-1)*Grid::q_s),    
 m_removed_walls(sf::Quads, size*size*Grid::q_s),    
 m_head_q(sf::Quads, Grid::q_s), 
 m_seen_q(size*size*Grid::q_s),
@@ -134,24 +136,46 @@ void Grid::createWalls(){
         m_h_walls[cnt+1].color = color_wall;
         m_h_walls[cnt+2].color = color_wall;
         m_h_walls[cnt+3].color = color_wall;
+        cnt = cnt + Grid::q_s;
+    }
+
+    // Create walls as row and columns 
+    int win_x = m_window.getSize().x;
+    int win_y = m_window.getSize().y;
+    cnt = 0;
+    for(int i=1;i<m_size;i++){
+        m_row_walls[cnt].position   = sf::Vector2f(m_outline_w, m_outline_w+m_sqr_h*i-m_thick/2);
+        m_row_walls[cnt+1].position = sf::Vector2f(win_x-m_outline_w, m_outline_w+m_sqr_h*i-m_thick/2);
+        m_row_walls[cnt+2].position = sf::Vector2f(win_x-m_outline_w, m_outline_w+m_sqr_h*i+m_thick/2);
+        m_row_walls[cnt+3].position = sf::Vector2f(m_outline_w, m_outline_w+m_sqr_h*i+m_thick/2);
+
+        m_row_walls[cnt].color   = color_wall;
+        m_row_walls[cnt+1].color = color_wall;
+        m_row_walls[cnt+2].color = color_wall;
+        m_row_walls[cnt+3].color = color_wall;
+
+        m_col_walls[cnt].position   = sf::Vector2f(m_outline_w+m_sqr_w*i-m_thick/2, m_outline_w);
+        m_col_walls[cnt+1].position = sf::Vector2f(m_outline_w+m_sqr_w*i+m_thick/2, m_outline_w);
+        m_col_walls[cnt+2].position = sf::Vector2f(m_outline_w+m_sqr_w*i+m_thick/2, win_y-m_outline_w);
+        m_col_walls[cnt+3].position = sf::Vector2f(m_outline_w+m_sqr_w*i-m_thick/2, win_y-m_outline_w);
+
+        m_col_walls[cnt].color   = color_wall;
+        m_col_walls[cnt+1].color = color_wall;
+        m_col_walls[cnt+2].color = color_wall;
+        m_col_walls[cnt+3].color = color_wall;
         cnt = cnt + 4;
     }
 }
 
-void Grid::setColorWallVert(const int cell_1, const int cell_2, const sf::Color& color_code){
-    // Index based on cell index
-    int cnt = cell_1*Grid::q_s - (cell_2/m_size)*Grid::q_s; // For each line last column is not counted so should be subtracted
-    
+void Grid::setColorWallVert(const int index, const sf::Color& color_code){    
     for(int i=0;i<Grid::q_s;i++){     
-        m_v_walls[cnt+i].color = color_code;
+        m_col_walls[index*Grid::q_s+i].color = color_code;
     }
 }
 
-void Grid::setColorWallHorz(const int  cell_1, const int cell_2, const sf::Color& color_code){
-    int cnt = cell_1*Grid::q_s; // index based on coordinates
-
+void Grid::setColorWallHorz(const int index, const sf::Color& color_code){
     for(int i=0;i<Grid::q_s;i++){     
-        m_h_walls[cnt+i].color = color_code;
+        m_h_walls[index*Grid::q_s+i].color = color_code;
     }
 }
 
@@ -165,13 +189,8 @@ void Grid::removeWall(const int cell_1, const int cell_2, sf::Color color){
     int gap = 0;
     
     // Fill gap of one pixel in case of truncation
-    if(m_thick%2!=0){
-        gap = m_thick/2 + 1;
-    }
-    else{
-        gap = m_thick/2;
-    }
-
+    gap = m_thick%2==0 ? m_thick/2 : m_thick/2+1;
+    
     static int counter = 0;
     // Adjacent horizontal cells with vertical wall in between
     if(std::abs(cell_1-cell_2)==1){        
@@ -179,12 +198,19 @@ void Grid::removeWall(const int cell_1, const int cell_2, sf::Color color){
             m_removed_walls[counter+i] = m_quads[cnt_2+i];
             m_removed_walls[counter+i].color = color;
         }
-
+        // Skip change in order to extend upper side for first row
+        if(cell_1>=m_size){
+            m_removed_walls[counter].position.y += m_thick/2;   
+            m_removed_walls[counter+1].position.y += m_thick/2;
+        }
+        // Skip change in order to extend bottom side for last row
+        if(cell_2<m_size*(m_size-1)){
+            m_removed_walls[counter+2].position.y -= m_thick/2;            
+            m_removed_walls[counter+3].position.y -= m_thick/2;            
+        }   
         // Build wall's size based on right cell dimenssions             
         m_removed_walls[counter].position.x -= gap;
-        m_removed_walls[counter].position.y += m_thick;
         m_removed_walls[counter+1].position.x = m_removed_walls[counter+1].position.x - m_sqr_w + gap;            
-        m_removed_walls[counter+1].position.y += m_thick;
         m_removed_walls[counter+2].position.x  = m_removed_walls[counter+2].position.x - m_sqr_w + gap;            
         m_removed_walls[counter+3].position.x -= gap;    
     }
@@ -194,15 +220,23 @@ void Grid::removeWall(const int cell_1, const int cell_2, sf::Color color){
         for(int i=0;i<Grid::q_s;i++){     
             m_removed_walls[counter+i] = m_quads[cnt_1+i];
             m_removed_walls[counter+i].color = color;
+        }
+
+        // Skip change in order to extend left side for first column
+        if(cell_1%m_size!=0){
+            m_removed_walls[counter].position.x   += m_thick/2;    
+            m_removed_walls[counter+3].position.x += m_thick/2;
+        }
+        // Skip change in order to extend right side for last column
+        if(cell_2%m_size!=(m_size-1)){
+            m_removed_walls[counter+1].position.x -= m_thick/2;            
+            m_removed_walls[counter+2].position.x -= m_thick/2;            
         }        
-        m_removed_walls[counter].position.x    += gap;
-        m_removed_walls[counter].position.y    += m_sqr_h;
-        m_removed_walls[counter+1].position.x -= m_thick/2;            
-        m_removed_walls[counter+1].position.y += m_sqr_h;
-        m_removed_walls[counter+2].position.x -= m_thick/2;            
-        m_removed_walls[counter+2].position.y += m_thick;            
-        m_removed_walls[counter+3].position.x += gap;
-        m_removed_walls[counter+3].position.y += m_thick;
+        
+        m_removed_walls[counter].position.y    = m_removed_walls[counter].position.y + m_sqr_h - m_thick/2;        
+        m_removed_walls[counter+1].position.y  = m_removed_walls[counter+1].position.y + m_sqr_h - m_thick/2;        
+        m_removed_walls[counter+2].position.y += m_thick/2;                    
+        m_removed_walls[counter+3].position.y += m_thick/2;
     }
     counter = counter+Grid::q_s;
 }
@@ -213,8 +247,8 @@ void Grid::setSize(const int size){
     // m_removed_walls.resize(m_no_walls*Grid::q_s);
     m_outline_w = 4; // pixels
 
-    int win_size_x = m_window .getSize().x - 2*m_outline_w;
-    int win_size_y = m_window .getSize().y - 2*m_outline_w;
+    int win_size_x = m_window.getSize().x - 2*m_outline_w;
+    int win_size_y = m_window.getSize().y - 2*m_outline_w;
     
     m_sqr_w = static_cast<int>(win_size_x / size);
     m_sqr_h = static_cast<int>(win_size_y / size);
@@ -283,10 +317,16 @@ void Grid::moveHead(const int x, const int y){
     m_old_y = y;
 }
 
-void Grid::setColorQuad(const int x, const int y, const sf::Color& color_code){
+void Grid::setColorQuad(const int x, const int y, const sf::Color color_code){
     int cnt = y*m_size*Grid::q_s + x*Grid::q_s; // index based on coordinates
     
     for(int i=0;i<Grid::q_s;i++){     
         m_quads[cnt+i].color = color_code;
+    }
+}
+
+void Grid::setColorAllQuads(const sf::Color color_code){
+     for(int i=0;i<m_quads.getVertexCount();i++){     
+        m_quads[i].color = color_code;
     }
 }

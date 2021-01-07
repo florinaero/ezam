@@ -1,15 +1,16 @@
 #ifndef _KRUSKAL_HPP
 #define _KRUSKAL_HPP
 
-#include "grid.hpp"
 #include <vector>
 #include <utility>
+#include "grid.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
 
 
-class Kruskal{
+class Kruskal : public sf::Drawable
+{
 public: 
     // ctor
     Kruskal(int lines, int cols);    
@@ -17,11 +18,13 @@ public:
     std::vector<std::pair<int,int>> getTree() const;   
     // Display maze based on Kruskal alg. and return false when finished
     bool display(sf::RenderWindow& window);
+    void setGrid(Grid* grid);
 
 private:    
     int m_lines;
     int m_cols;
     int m_walls;
+    Grid *m_grid;
     std::vector<std::pair<int,int>>m_vert_walls;
     std::vector<std::pair<int,int>>m_horz_walls;
     std::vector<std::pair<int,int>>m_seq_walls; // Sequence of randomly selected walls
@@ -33,12 +36,12 @@ private:
     void storeWalls();
     // Randomly select one wall from collection of vertical and horiz.
     void randWall() noexcept;
-    void markCells(int cell_1, int cell_2,sf::Color color, Grid& grid);
-    void markWall(int cell_1, int cell_2,sf::Color color, Grid& grid);
-    void setQuad(int idx, int width, int height);
-    void showWalls();
+    // Kruskal alg
     void unionSet(int cell_1, int cell_2);
     int findSet(int cell);   
+    void markCells(int cell_1, int cell_2,sf::Color color, Grid* grid);
+    void showWalls();
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
 
