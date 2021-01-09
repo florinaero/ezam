@@ -13,3 +13,4 @@
 *.dll
 /Default/
 *.idb
+/zz_temp
