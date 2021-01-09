@@ -16,6 +16,8 @@ public:
     Control();
     // ctor for window's size
     Control(int width_win, int height_win, int size);
+    // dtor
+    ~Control();
     void setInputSize(int size);
     void run();
     static bool isMouseOnArea(const sf::RenderWindow& window, const sf::FloatRect& area_coord);

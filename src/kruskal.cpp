@@ -5,16 +5,25 @@
 #include <thread>
 #include <chrono>
 
-Kruskal::Kruskal(int lines, int cols):
+// Ctor
+Kruskal::Kruskal(int lines, int cols, std::shared_ptr<Grid> sp_grid):
+m_grid(sp_grid),
 m_lines(lines),
 m_cols(cols),
 m_walls((cols-1)*lines + cols*(lines-1)),
 m_cells(lines*cols)
 {
+    if(sp_grid==nullptr){
+        throw std::exception("null dependency!");
+    }
     init();
     storeWalls();
     randWall();
     showWalls();
+}
+
+// dtor
+Kruskal::~Kruskal(){
 }
 
 void Kruskal::init(){
@@ -83,7 +92,7 @@ void Kruskal::randWall() noexcept{
             m_tree.push_back(pair_cells);
             
             unionSet(idx_1,idx_2);
-            std::cout << "idx_1: " << idx_1 << " idx_2: " << idx_2 << std::endl;
+            // std::cout << "idx_1: " << idx_1 << " idx_2: " << idx_2 << std::endl;
             std::cout << "";
         }        
     }
@@ -109,7 +118,6 @@ std::vector<std::pair<int,int>> Kruskal::getTree() const {
 }
 
 bool Kruskal::display(sf::RenderWindow& window) {
-    Grid grid(m_lines, window);
     std::vector<std::pair<int,int>>::const_iterator it;
     sf::Event event;
     
@@ -120,23 +128,22 @@ bool Kruskal::display(sf::RenderWindow& window) {
                 window.close();
             }
         }
-        // markCells(it->first, it->second, sf::Color::Red, grid);
         m_grid->removeWall(it->first, it->second, sf::Color::Green);
         markCells(it->first, it->second, sf::Color::Red, m_grid);
         window.draw(*this); 
         
         window.display();
-        std::this_thread::sleep_for(std::chrono::milliseconds{30}); 
+        std::this_thread::sleep_for(std::chrono::milliseconds{10}); 
           
         markCells(it->first, it->second, sf::Color::Green, m_grid);
         window.draw(*this); 
         window.display();
-        std::this_thread::sleep_for(std::chrono::milliseconds{30}); 
+        std::this_thread::sleep_for(std::chrono::milliseconds{10}); 
     }
     return false;
 }
 
-void Kruskal::markCells(int cell_1, int cell_2,sf::Color color, Grid* grid){
+void Kruskal::markCells(int cell_1, int cell_2,sf::Color color, std::shared_ptr<Grid> grid){
     int x = cell_1 % m_lines; // line's index
     int y = cell_1 / m_lines; // column's index
     grid->setColorQuad(x,y,color);
@@ -177,7 +184,10 @@ void Kruskal::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     // ... or draw with OpenGL directly
 }
 
-void Kruskal::setGrid(Grid* grid){
+void Kruskal::setGrid(std::shared_ptr<Grid> grid){
+    if(grid==nullptr){
+        throw std::exception("null dependency!");
+    }
     m_grid = grid;
 }
 

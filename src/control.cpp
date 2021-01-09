@@ -1,10 +1,11 @@
+#include <thread>
+#include <chrono>
+#include <iostream>
+#include <memory>
 #include "control.hpp"
 #include "grid.hpp"
 #include "maze.hpp"
 #include "kruskal.hpp"
-#include <thread>
-#include <chrono>
-#include <iostream>
 
 Control::Control(int width_win, int height_win, int size):
 m_window(sf::VideoMode(width_win, height_win), "ezam", sf::Style::Default),
@@ -14,11 +15,14 @@ m_input_size(size)
     //  NEVER use together setVerticalSyncEnabled() with setFramerateLimit()
     // m_window.setVerticalSyncEnabled(true); 
     // m_window.setFramerateLimit(60);
-    m_window.setPosition(sf::Vector2i(1400, -1080));
-    // m_window.setPosition(sf::Vector2i(0, 0));   // top-left
+    // m_window.setPosition(sf::Vector2i(900, -1080));
+    m_window.setPosition(sf::Vector2i(0, 0));   // top-left
     Control::setFont();
 };
 
+// dtor
+Control::~Control(){
+}
 void Control::setInputSize(int size) {
     m_input_size = size;
 }
@@ -26,15 +30,18 @@ void Control::initialize(){
     // empty
 }
 
+//************************************************************
+//      Process and display
+//************************************************************
 void Control::run(){
     bool title_on = true;        
     static bool is_running = true;
     bool is_krusk_running = true;
-    Kruskal krusk(m_input_size,m_input_size);
-    Maze maze(m_input_size);
-    Grid grid(m_input_size, m_window);
-    krusk.setGrid(&grid);
-    maze.setGrid(&grid);
+    bool is_dft_running = true;
+    
+    std::shared_ptr<Grid> sp_grid = std::make_shared<Grid>(Grid(m_input_size, m_window));   
+    Maze maze(m_input_size, sp_grid);
+    Kruskal krusk(m_input_size,m_input_size,sp_grid); 
 
     setTitle();
     Control::initialize();
@@ -45,6 +52,38 @@ void Control::run(){
         size_text.setCharacterSize(50);
         static sf::String size_input;     
         sf::Clock clock;
+        
+        // Display title page 
+        for(auto& elem : m_frames){
+            if(elem.second.first==true)
+            m_window.draw(elem.second.second);
+        }
+        // Start Kruskal maze after title page
+        if(m_frames.at("title").first == false){            
+            if(is_krusk_running){               
+                is_krusk_running = krusk.display(m_window);
+            }
+        }
+        // Showing maze with DFS
+        if(is_krusk_running==false&&is_dft_running==true){
+            sp_grid->setColorAllQuads(sf::Color::Red);
+            std::this_thread::sleep_for(std::chrono::milliseconds{500});
+            is_dft_running = maze.display(m_window);            
+        }
+
+        if(is_dft_running==false){
+            // m_window.close();
+        }
+        if(is_running&&is_krusk_running){            
+            m_window.display(); 
+            m_window.clear(sf::Color::Cyan);         
+            sf::Time time = clock.getElapsedTime();
+            // std::cout << "fps: " << 1.0f/time.asSeconds() << std::endl;
+            clock.restart();  
+        }
+        else{
+            // Avoid clearing
+        }
 
         while (m_window.pollEvent(event)){
             if (event.type == sf::Event::Closed){
@@ -62,58 +101,7 @@ void Control::run(){
                 } 
             }
         }
-        
-        // Display title page 
-        for(auto& elem : m_frames){
-            if(elem.second.first==true)
-            m_window.draw(elem.second.second);
-        }
-        // Start drawing after displaying title page
-        if(m_frames.at("title").first == false){            
-            if(is_krusk_running){               
-                is_krusk_running = krusk.display(m_window);
-            }
-        }
-        // Showing maze with DFS
-        if(is_krusk_running==false){
-            grid.setColorAllQuads(sf::Color::Red);
-            maze.display(m_window);
-            m_window.display();
-        }
-
-        if(is_running&&is_krusk_running){            
-            m_window.display(); 
-            m_window.clear(sf::Color::Cyan);         
-            sf::Time time = clock.getElapsedTime();
-            // std::cout << "fps: " << 1.0f/time.asSeconds() << std::endl;
-            clock.restart();  
-        }
-        else{
-            // Avoid clearing
-        }
     }
-}
-
-// Create display content for maze coordinates
-bool Control::showMaze(){
-    // std::vector<std::pair<int,int>> coord;
-    // m_maze.getCoord(coord);
-    // static int counter = 0;
-    // bool is_running = false;
-
-    // if(counter<coord.size()){                                
-    //     auto coord_pair = coord.at(counter);
-    //     counter++;         
-    //     // std::cout << "x=" << coord_pair.first << " y=" << coord_pair.second << std::endl;
-    //     m_grid.moveHead(coord_pair.first,coord_pair.second);
-    //     std::this_thread::sleep_for(std::chrono::milliseconds{10});        
-    //     m_window.draw(m_grid);
-    //     is_running = true;
-    // }
-    // else{
-    //     is_running = false;
-    // }
-    return false;
 }
 
 void Control::setTitle() {
