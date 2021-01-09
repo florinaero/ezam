@@ -15,7 +15,6 @@ m_row_walls(sf::Quads, (size-1)*Grid::q_s),
 m_col_walls(sf::Quads, (size-1)*Grid::q_s),    
 m_removed_walls(sf::Quads, size*size*Grid::q_s),    
 m_head_q(sf::Quads, Grid::q_s), 
-m_seen_q(size*size*Grid::q_s),
 m_old_x(0), 
 m_old_y(0)
 {
@@ -25,8 +24,9 @@ m_old_y(0)
     createWalls();
 };
 
-Grid::~Grid(){
-};
+// Grid::~Grid(){
+//     std::cout << "dtor Grid" << std::endl;
+// };
 
 // Create window's outline from 4 vertices
 void Grid::createOutline(){
@@ -268,55 +268,6 @@ void Grid::setSize(const int size){
     }
 }
 
-void Grid::moveHead(const int x, const int y){
-    // @todo: Check why this color is not working and lines are not dashed 
-    sf::Color color_bgr = sf::Color(1,1,1,1);//sf::Color::Green;
-    // Map coordinates with window's size 
-    m_head_q[0].position = sf::Vector2f(m_sqr_w*x+m_thick, m_sqr_h*y+m_thick);
-    m_head_q[1].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y+m_thick);
-    m_head_q[2].position = sf::Vector2f(m_sqr_w*x+m_sqr_w, m_sqr_h*y+m_sqr_h);
-    m_head_q[3].position = sf::Vector2f(m_sqr_w*x+m_thick, m_sqr_h*y+m_sqr_h);            
-    
-    int cnt = y*m_size*Grid::q_s + x*Grid::q_s; // index based on coordinates
-    for(int i=0;i<Grid::q_s;i++){
-        m_head_q[i].color = sf::Color::Magenta;
-        // Color after cell is touched
-        m_quads[cnt+i].color = sf::Color::Yellow;
-    }
-
-    cnt = m_old_y*m_size*Grid::q_s + x*Grid::q_s;
-    // North
-    if(m_old_y-y==1){
-        cnt = m_old_y*m_size*Grid::q_s + x*Grid::q_s;
-        for(int i=0;i<Grid::q_s;i++){     
-            m_h_walls[cnt+i].color = color_bgr;
-        }
-    }
-    // Est
-    if(m_old_x-x==-1){
-        cnt = y*m_size*Grid::q_s + x*Grid::q_s;
-        for(int i=0;i<Grid::q_s;i++){     
-            m_v_walls[cnt+i].color = color_bgr;
-        }
-    }
-    // South
-    if(m_old_y-y==-1){
-        cnt = y*m_size*Grid::q_s + x*Grid::q_s;
-        for(int i=0;i<Grid::q_s;i++){     
-            m_h_walls[cnt+i].color = color_bgr;
-        }
-    }
-    // West
-    if(m_old_x-x==1){
-        cnt = y*m_size*Grid::q_s + m_old_x*Grid::q_s;
-        for(int i=0;i<Grid::q_s;i++){     
-            m_v_walls[cnt+i].color = color_bgr;
-        }
-    }
-    m_old_x = x;
-    m_old_y = y;
-}
-
 void Grid::setColorQuad(const int x, const int y, const sf::Color color_code){
     int cnt = y*m_size*Grid::q_s + x*Grid::q_s; // index based on coordinates
     
@@ -325,8 +276,36 @@ void Grid::setColorQuad(const int x, const int y, const sf::Color color_code){
     }
 }
 
+bool Grid::getColorQuad(const int x, const int y, std::vector<sf::Color>& color_codes){
+    int cnt = y*m_size*Grid::q_s + x*Grid::q_s; // index based on coordinates
+    
+    if(color_codes.size()<Grid::q_s){
+        return false;
+    }
+    for(int i=0;i<Grid::q_s;i++){     
+        color_codes[i] = m_quads[cnt+i].color;
+    }
+    return true;
+}
+
 void Grid::setColorAllQuads(const sf::Color color_code){
      for(int i=0;i<m_quads.getVertexCount();i++){     
         m_quads[i].color = color_code;
     }
+}
+
+int Grid::getSqrW() const{
+    return m_sqr_w;
+}    
+
+int Grid::getSqrH() const{
+    return m_sqr_h;
+}
+
+int Grid::getWallThick() const{
+    return m_thick;
+}
+
+int Grid::getOutlineW() const{
+    return m_outline_w;
 }

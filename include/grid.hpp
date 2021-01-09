@@ -10,24 +10,24 @@ class Grid : public sf::Drawable
 public:
     Grid();
     Grid(int size, const sf::RenderWindow& window);
-    // Map coordinates to window size 
-    void moveHead(const int x, const int y);
     // Set quads color based on grid coordinates
     void setColorQuad(const int x, const int y, const sf::Color color_code);
+    
+    //@brief: Get color of all quads as a vector with exact size of quads 
+    //@return False if size of vector is smaller than number of quads
+    bool getColorQuad(const int x, const int y, std::vector<sf::Color>& color_codes);
     // Set color for all quads
     void setColorAllQuads(const sf::Color color_code);    
     // Set vertical wall color based on index from left to right
     void setColorWallVert(const int index, const sf::Color& color_code);
     // Set horizontal wall color based on index from up to bottom
     void setColorWallHorz(const int index, const sf::Color& color_code);
+
     // Remove wall between 2 adjacent cells on horizontal or vertical
     void removeWall(const int cell_1, const int cell_2, sf::Color color);
-    ~Grid();
+    // ~Grid();
     
-    static inline const int q_s = 4; // number of lines for one quad
-    int m_sqr_w; // square width
-    int m_sqr_h; // square height
-    int m_outline_w; // outline width
+    static inline const int q_s = 4; // number of lines for one quad    
     sf::VertexArray m_outline;
     sf::VertexArray m_quads;
     sf::VertexArray m_v_walls;
@@ -36,6 +36,11 @@ public:
     sf::VertexArray m_col_walls;
     sf::VertexArray m_removed_walls;
     sf::VertexArray m_head_q;
+
+    int getSqrW() const;    
+    int getSqrH() const;  
+    int getWallThick() const;  
+    int getOutlineW() const;
 
 private:
     // Create window's outlien based on window dimenssions
@@ -64,13 +69,15 @@ private:
         
     sf::Sprite m_sprite;
     sf::Texture m_texture;
-    std::deque<sf::Vertex> m_seen_q; // Seen quads by head 
     const sf::RenderWindow& m_window;
     int m_size;
     int m_thick;
     int m_old_x; 
     int m_old_y; 
     int m_no_walls; // number of inside walls for m*m grid
+    int m_sqr_w; // square width
+    int m_sqr_h; // square height
+    int m_outline_w; // outline width
   
 };
 

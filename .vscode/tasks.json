@@ -8,12 +8,15 @@
             "args": [
                 "/std:c++latest",
                 "/Zi",
+                //"/MDd", // Use /MDd or /MTd to define _DEBUG and allow _CrtDumpMemoryLeaks()
                 "/EHsc",
                 "src\\*.cpp",
                 "/I",
                 "include",
                 "/I",
                 "C:\\_Personal\\libs\\SFML-2.5.1-sources\\SFML-2.5.1\\include",
+                "/I",
+                "C:\\Program Files (x86)\\Visual Leak Detector\\include",
                 "/Fe:",
                 "${workspaceFolder}\\out\\result.exe",
                 "/Fo:",
@@ -26,7 +29,9 @@
                 "sfml-window.lib",
                 "sfml-main.lib",
                 "sfml-audio.lib",
-                "sfml-system.lib"
+                "sfml-system.lib",
+                "/LIBPATH:C:\\Program Files (x86)\\Visual Leak Detector\\lib\\Win32",
+                "vld.lib"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
