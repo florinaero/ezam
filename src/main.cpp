@@ -12,8 +12,6 @@
 using namespace std;
 
 int main (){
-
-	std::cout << "Maze generator: Randomized depth-first search." << endl;
 	int size = 30;
 
 	// Construct render window

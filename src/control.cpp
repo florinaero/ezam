@@ -6,6 +6,7 @@
 #include "grid.hpp"
 #include "maze.hpp"
 #include "kruskal.hpp"
+#include "recursive_div.hpp"
 
 Control::Control(int width_win, int height_win, int size):
 m_window(sf::VideoMode(width_win, height_win), "ezam", sf::Style::Default),
@@ -15,8 +16,8 @@ m_input_size(size)
     //  NEVER use together setVerticalSyncEnabled() with setFramerateLimit()
     // m_window.setVerticalSyncEnabled(true); 
     // m_window.setFramerateLimit(60);
-    // m_window.setPosition(sf::Vector2i(900, -1080));
     m_window.setPosition(sf::Vector2i(0, 0));   // top-left
+    m_window.setPosition(sf::Vector2i(1000, -1180));
     Control::setFont();
 };
 
@@ -34,14 +35,18 @@ void Control::initialize(){
 //      Process and display
 //************************************************************
 void Control::run(){
-    bool title_on = true;        
     static bool is_running = true;
+    bool title_on = true;        
+    bool is_rec_running = true;
     bool is_krusk_running = true;
     bool is_dft_running = true;
+    // bool is_krusk_running = false;
+    // bool is_dft_running = false;
     
     std::shared_ptr<Grid> sp_grid = std::make_shared<Grid>(Grid(m_input_size, m_window));   
     Maze maze(m_input_size, sp_grid);
-    Kruskal krusk(m_input_size,m_input_size,sp_grid); 
+    Kruskal krusk(m_input_size,m_input_size,sp_grid);
+    RecursiveDiv recDiv(m_input_size,sp_grid,m_window);
 
     setTitle();
     Control::initialize();
@@ -51,30 +56,38 @@ void Control::run(){
         sf::Text size_text;            
         size_text.setCharacterSize(50);
         static sf::String size_input;     
-        sf::Clock clock;
+        sf::Clock clock;                
         
-        // Display title page 
-        for(auto& elem : m_frames){
-            if(elem.second.first==true)
-            m_window.draw(elem.second.second);
-        }
         // Start Kruskal maze after title page
-        if(m_frames.at("title").first == false){            
+        if(m_frames.at("title").first == false){                        
             if(is_krusk_running){               
                 is_krusk_running = krusk.display(m_window);
             }
         }
         // Showing maze with DFS
-        if(is_krusk_running==false&&is_dft_running==true){
+        if(is_krusk_running==false && is_dft_running==true){
             sp_grid->setColorAllQuads(sf::Color::Red);
             std::this_thread::sleep_for(std::chrono::milliseconds{500});
             is_dft_running = maze.display(m_window);            
         }
+        // Show maze with recursive division
+        if(is_dft_running==false && is_rec_running==true){
+            is_rec_running = recDiv.display(m_window);
+        }
 
-        if(is_dft_running==false){
+        if(is_rec_running==false){
             // m_window.close();
         }
-        if(is_running&&is_krusk_running){            
+
+        // Display title page 
+        if(m_frames.at("title").first==true){
+            for(auto& elem : m_frames){
+                if(elem.second.first==true)
+                m_window.draw(elem.second.second);
+            }
+        }
+        
+        if(m_frames.at("title").first==true){            
             m_window.display(); 
             m_window.clear(sf::Color::Cyan);         
             sf::Time time = clock.getElapsedTime();

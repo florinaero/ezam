@@ -6,12 +6,12 @@
 #include <chrono>
 
 // Ctor
-Kruskal::Kruskal(int lines, int cols, std::shared_ptr<Grid> sp_grid):
-m_grid(sp_grid),
-m_lines(lines),
-m_cols(cols),
-m_walls((cols-1)*lines + cols*(lines-1)),
-m_cells(lines*cols)
+Kruskal::Kruskal(int lines, int cols, std::shared_ptr<Grid> sp_grid)
+    : m_grid(sp_grid),
+      m_lines(lines),
+      m_cols(cols),
+      m_walls((cols-1)*lines + cols*(lines-1)),
+      m_cells(lines*cols) 
 {
     if(sp_grid==nullptr){
         throw std::exception("null dependency!");
@@ -165,7 +165,7 @@ void Kruskal::showWalls(){
         }
     }
     j=0;
-    std::cout << "spanning tree\n";
+
     for(auto& i : m_tree){
         if(logging::SHOW){
             std::cout << "idx = " << j++ << "  ";

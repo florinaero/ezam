@@ -4,6 +4,7 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 #include <deque>
+#include <set>
 
 class Grid : public sf::Drawable
 {
@@ -18,11 +19,14 @@ public:
     bool getColorQuad(const int x, const int y, std::vector<sf::Color>& color_codes);
     // Set color for all quads
     void setColorAllQuads(const sf::Color color_code);    
-    // Set vertical wall color based on index from left to right
-    void setColorWallVert(const int index, const sf::Color& color_code);
-    // Set horizontal wall color based on index from up to bottom
-    void setColorWallHorz(const int index, const sf::Color& color_code);
-
+    // Set color for vertical wall(column) based on index from left to right
+    void setColorWallVert(const int index, const sf::Color color_code);
+    // Set color for horizontal wall(row) based on index from up to bottom
+    void setColorWallHorz(const int index, const sf::Color color_code);
+    // Set color of all horizontal walls
+    void setColorAllWallsHorz(const sf::Color color_code);
+    // Set color of all vertical walls
+    void setColorAllWallsVert(const sf::Color color_code);
     // Remove wall between 2 adjacent cells on horizontal or vertical
     void removeWall(const int cell_1, const int cell_2, sf::Color color);
     // ~Grid();
@@ -41,6 +45,7 @@ public:
     int getSqrH() const;  
     int getWallThick() const;  
     int getOutlineW() const;
+    int getSize() const;
 
 private:
     // Create window's outlien based on window dimenssions
