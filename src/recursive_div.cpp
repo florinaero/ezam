@@ -55,7 +55,6 @@ void RecursiveDiv::split(int x, int y, int wid, int hgt){
     counter++;
 
     if(wid<2 || hgt<2){
-        std::cout << "stop";
         return;
     }
 
@@ -145,7 +144,7 @@ void RecursiveDiv::split(int x, int y, int wid, int hgt){
        
     }
 
-    if(logging::ON){
+    if(logging::OFF){
         std::cout <<"\n"<< counter <<". ";
         std::cout << " row = " << row;
         std::cout << " col = " << col;

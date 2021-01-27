@@ -17,7 +17,7 @@ m_input_size(size)
     // m_window.setVerticalSyncEnabled(true); 
     // m_window.setFramerateLimit(60);
     m_window.setPosition(sf::Vector2i(0, 0));   // top-left
-    m_window.setPosition(sf::Vector2i(1000, -1180));
+    // m_window.setPosition(sf::Vector2i(1000, -1180));
     Control::setFont();
 };
 

@@ -196,7 +196,6 @@ bool Maze::display(sf::RenderWindow& window) {
         window.draw(*this);
 		window.display();        
     }
-	std::cout << "Done maze" << std::endl;
     return false;
 }
 
