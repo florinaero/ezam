@@ -167,15 +167,27 @@ void Grid::createWalls(){
     }
 }
 
-void Grid::setColorWallVert(const int index, const sf::Color& color_code){    
+void Grid::setColorWallVert(const int index, const sf::Color color_code){    
     for(int i=0;i<Grid::q_s;i++){     
         m_col_walls[index*Grid::q_s+i].color = color_code;
     }
 }
 
-void Grid::setColorWallHorz(const int index, const sf::Color& color_code){
+void Grid::setColorWallHorz(const int index, const sf::Color color_code){
     for(int i=0;i<Grid::q_s;i++){     
-        m_h_walls[index*Grid::q_s+i].color = color_code;
+        m_row_walls[index*Grid::q_s+i].color = color_code;
+    }
+}
+
+void Grid::setColorAllWallsHorz(const sf::Color color_code){
+    for(int i=0;i<m_row_walls.getVertexCount();i++){     
+        m_row_walls[i].color = color_code;
+    }
+}
+
+void Grid::setColorAllWallsVert(const sf::Color color_code){
+    for(int i=0;i<m_col_walls.getVertexCount();i++){     
+        m_col_walls[i].color = color_code;
     }
 }
 
@@ -289,7 +301,7 @@ bool Grid::getColorQuad(const int x, const int y, std::vector<sf::Color>& color_
 }
 
 void Grid::setColorAllQuads(const sf::Color color_code){
-     for(int i=0;i<m_quads.getVertexCount();i++){     
+    for(int i=0;i<m_quads.getVertexCount();i++){     
         m_quads[i].color = color_code;
     }
 }
@@ -308,4 +320,8 @@ int Grid::getWallThick() const{
 
 int Grid::getOutlineW() const{
     return m_outline_w;
+}
+
+int Grid::getSize() const{
+    return m_size;
 }

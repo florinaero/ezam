@@ -60,6 +60,8 @@
         "xhash": "cpp",
         "atomic": "cpp",
         "thread": "cpp",
-        "compare": "cpp"
+        "compare": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }
