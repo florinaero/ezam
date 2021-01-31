@@ -7,7 +7,7 @@
             "command": "cl.exe",
             "args": [
                 "/std:c++latest",
-                "/Zi",
+                "/Zi", // /Zi imply /DEBUG
                 //"/MDd", // Use /MDd or /MTd to define _DEBUG and allow _CrtDumpMemoryLeaks()
                 "/EHsc",
                 "src\\*.cpp",

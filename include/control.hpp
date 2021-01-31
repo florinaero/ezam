@@ -32,9 +32,16 @@ private:
     bool showMaze();
     // Set Title page 
     void setTitle();
+    ////////////////////////////////////////////////////////////
+    /// @brief Set the title of the next stage 
+    ////////////////////////////////////////////////////////////
+    std::pair<sf::Text, bool> setStageName(std::string name);
     // Set font 
     bool setFont();
     void initialize();
+    bool displayKrusk(std::shared_ptr<Grid> sp_grid);
+    bool displayDft(std::shared_ptr<Grid> sp_grid);
+    bool displayRecDiv(std::shared_ptr<Grid> sp_grid);
 };
 
 #endif

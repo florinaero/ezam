@@ -52,9 +52,9 @@ struct EmptyWall{
 
 class RecursiveDiv : public sf::Drawable{
  public:
-    RecursiveDiv(int size, std::shared_ptr<Grid> sp_grid, sf::RenderWindow& window);
-    ~RecursiveDiv();
-    bool display(sf::RenderWindow& window);
+   RecursiveDiv(std::shared_ptr<Grid> sp_grid, sf::RenderWindow& window);
+   ~RecursiveDiv();
+   bool display();
  private:
    sf::RenderWindow& m_window;
    sf::VertexBuffer m_vert_walls;
@@ -66,7 +66,6 @@ class RecursiveDiv : public sf::Drawable{
    std::vector<Coord> m_walls_coord; //<X,Y,width,height> of walls to be shown     
    std::stack<Coord> m_que_halves; // queue of coord and dimenssions of unprocessed halves 
    std::set<Coord> m_visited_halves;
-   int m_size;
    const int m_VERT = 1; 
    const int m_HORZ = 0; 
    std::shared_ptr<Grid> m_sp_grid;

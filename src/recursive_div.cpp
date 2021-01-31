@@ -5,13 +5,11 @@
 #include "utils.hpp"
 #include "logging.hpp"
 
-RecursiveDiv::RecursiveDiv(int size, std::shared_ptr<Grid> sp_grid, sf::RenderWindow& window)
+RecursiveDiv::RecursiveDiv(std::shared_ptr<Grid> sp_grid, sf::RenderWindow& window)
     : m_walls(sf::Quads),
       m_sp_grid(sp_grid),
       m_window(window)
-{
-
-}
+{}
 
 RecursiveDiv::~RecursiveDiv(){}
 
@@ -21,19 +19,10 @@ void RecursiveDiv::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(m_vect_walls.data(), m_vect_walls.size(),sf::Quads, states);
 }
 
-bool RecursiveDiv::display(sf::RenderWindow& window){
-    sf::Event event;
-    int offset = 0;
-    // Watch for events
-    while (window.pollEvent(event)){
-        if (event.type == sf::Event::Closed){
-            window.close();
-        }
-    }
-
+bool RecursiveDiv::display(){
     m_sp_grid->setColorAllQuads(sf::Color::Yellow);
-
-    split(0, 0, m_sp_grid->getSize(), m_sp_grid->getSize()); // first call with resolution
+    // Start displying
+    split(0, 0, m_sp_grid->getSize(), m_sp_grid->getSize()); 
     return false;
 }
 
@@ -140,8 +129,7 @@ void RecursiveDiv::split(int x, int y, int wid, int hgt){
         new_hgt = coord.m_hgt;
         m_que_halves.pop();
     }
-    else{
-       
+    else{       
     }
 
     if(logging::OFF){

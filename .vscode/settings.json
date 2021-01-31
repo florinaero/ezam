@@ -62,6 +62,7 @@
         "thread": "cpp",
         "compare": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "set": "cpp"
     }
 }

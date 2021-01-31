@@ -44,12 +44,8 @@ void Control::run(){
     // bool is_dft_running = false;
     
     std::shared_ptr<Grid> sp_grid = std::make_shared<Grid>(Grid(m_input_size, m_window));   
-    Maze maze(m_input_size, sp_grid);
-    Kruskal krusk(m_input_size,m_input_size,sp_grid);
-    RecursiveDiv recDiv(m_input_size,sp_grid,m_window);
-
-    setTitle();
     Control::initialize();
+    setTitle();
 
     while (m_window.isOpen()){
         sf::Event event;
@@ -59,20 +55,20 @@ void Control::run(){
         sf::Clock clock;                
         
         // Start Kruskal maze after title page
-        if(m_frames.at("title").first == false){                        
-            if(is_krusk_running){               
-                is_krusk_running = krusk.display(m_window);
+        if(m_frames.at("title").first == false){    
+            if(is_krusk_running){            
+                is_krusk_running = displayKrusk(sp_grid);
             }
         }
         // Showing maze with DFS
         if(is_krusk_running==false && is_dft_running==true){
             sp_grid->setColorAllQuads(sf::Color::Red);
             std::this_thread::sleep_for(std::chrono::milliseconds{500});
-            is_dft_running = maze.display(m_window);            
+            is_dft_running = displayDft(sp_grid);            
         }
         // Show maze with recursive division
         if(is_dft_running==false && is_rec_running==true){
-            is_rec_running = recDiv.display(m_window);
+            is_rec_running = displayRecDiv(sp_grid);
         }
 
         if(is_rec_running==false){
@@ -102,7 +98,6 @@ void Control::run(){
             if (event.type == sf::Event::Closed){
                 m_window.close();
             }
-                 
             if (event.type == sf::Event::TextEntered){
                 size_input += event.text.unicode;
                 size_text.setString(size_input);
@@ -111,7 +106,7 @@ void Control::run(){
                 if(Control::isMouseOnArea(m_window, m_frames.at("start").second.getGlobalBounds())){
                     m_frames.at("title").first = false;
                     m_frames.at("start").first = false;
-                } 
+                }                
             }
         }
     }
@@ -137,6 +132,17 @@ void Control::setTitle() {
     m_frames.emplace(std::make_pair("start", std::make_pair(true,start)));
 }
 
+// Set label for next stage
+std::pair<sf::Text, bool> Control::setStageName(std::string name){
+    sf::Text text {"PRESS NEXT: "+name, m_font, 20};
+    sf::Vector2u win_size = m_window.getSize();
+    auto bounds = text.getGlobalBounds();
+    text.setFillColor(sf::Color::Black);
+    text.setOutlineThickness(1);
+    text.setPosition(0, 0);
+    return std::make_pair(text, true);
+}
+
 bool Control::setFont(){
     if(m_font.loadFromFile("C:\\_Personal\\repo\\ezam\\config\\fonts\\MAIAN.tff")!=true){
         std::cout << "Error in loading font" << std::endl;
@@ -147,6 +153,8 @@ bool Control::setFont(){
 
 bool Control::isMouseOnArea(const sf::RenderWindow& window, const sf::FloatRect& area_coord){
     auto position = sf::Mouse::getPosition(window);
+    std::cout << "x=" << position.x << " y=" << position.y << std::endl; 
+    std::cout << "xT=" << area_coord.width << " yT=" << area_coord.height << std::endl; 
     if(area_coord.contains(static_cast<sf::Vector2f>(position))){
         return true;
     }
@@ -155,6 +163,72 @@ bool Control::isMouseOnArea(const sf::RenderWindow& window, const sf::FloatRect&
     }
 }
 
+bool Control::displayKrusk(std::shared_ptr<Grid> sp_grid){    
+    Kruskal krusk(m_input_size,m_input_size,sp_grid);
+    auto stage = setStageName("krusk's design");
+    sf::Event event;
+    
+    // m_window.clear(sf::Color::Green); 
+    m_window.draw(stage.first);
+    m_window.display(); 
 
+    while (m_window.pollEvent(event) || true){
+        if (event.type == sf::Event::Closed){
+            m_window.close();
+        }
+        if (event.type == sf::Event::MouseButtonPressed){
+            if(Control::isMouseOnArea(m_window, stage.first.getGlobalBounds())){
+                krusk.display(m_window);
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
+bool Control::displayDft(std::shared_ptr<Grid> sp_grid){    
+    Maze dft(m_input_size, sp_grid);
+    auto stage= setStageName("dft design");
+    sf::Event event;
+
+    // m_window.clear(sf::Color::Green); 
+    m_window.draw(stage.first);
+    m_window.display(); 
+    
+    while (m_window.pollEvent(event) || true){
+        if (event.type == sf::Event::Closed){
+            m_window.close();
+        }
+        if (event.type == sf::Event::MouseButtonPressed){
+            if(Control::isMouseOnArea(m_window, stage.first.getGlobalBounds())){
+                dft.display(m_window);
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool Control::displayRecDiv(std::shared_ptr<Grid> sp_grid){    
+    RecursiveDiv recDiv(sp_grid,m_window);
+    auto stage= setStageName("recdiv design");
+    sf::Event event;
+
+    // m_window.clear(sf::Color::Green); 
+    m_window.draw(stage.first);
+    m_window.display(); 
+
+    while (m_window.pollEvent(event) || true){
+        if (event.type == sf::Event::Closed){
+            m_window.close();
+        }
+        if (event.type == sf::Event::MouseButtonPressed){
+            if(Control::isMouseOnArea(m_window, stage.first.getGlobalBounds())){
+                recDiv.display();
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
