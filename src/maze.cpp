@@ -177,14 +177,15 @@ void Maze::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     // ... or draw with OpenGL directly
 }
 
-bool Maze::display(sf::RenderWindow& window) {
+bool Maze::display(std::shared_ptr<sf::RenderWindow> window) {
 	sf::Event event;
+	long wait_time = 10;
 
     for(int i=0;i<m_coord.size();i++){
 		// Watch for events
-        while (window.pollEvent(event)){
+        while (window->pollEvent(event)){
             if (event.type == sf::Event::Closed){
-                window.close();
+                window->close();
             }
         }  
                           
@@ -192,9 +193,9 @@ bool Maze::display(sf::RenderWindow& window) {
         // std::cout << "x=" << coord_pair.first << " y=" << coord_pair.second << std::endl;
         this->moveHead(coord_pair.first, coord_pair.second);
         
-		std::this_thread::sleep_for(std::chrono::milliseconds{10});        
-        window.draw(*this);
-		window.display();        
+		std::this_thread::sleep_for(std::chrono::milliseconds{wait_time});        
+        window->draw(*this);
+		window->display();        
     }
     return false;
 }

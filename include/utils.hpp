@@ -7,6 +7,7 @@
 #define _UTILS_HPP
 
 #include <cstdint>
+#include <SFML/Graphics.hpp>
 
 namespace utils{
 
@@ -18,6 +19,11 @@ namespace utils{
 
     // Return random number in closed interval
     int32_t randRange(const int32_t start, const int32_t stop);    
+    
+    class ObjectMaze{
+    public:
+        virtual bool display(std::shared_ptr<sf::RenderWindow> window) = 0;
+    };
 }
 
 #endif 

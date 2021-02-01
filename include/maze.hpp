@@ -10,8 +10,9 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "grid.hpp"
+#include "utils.hpp"
 
-class Maze : sf::Drawable 
+class Maze : public sf::Drawable, public utils::ObjectMaze 
 {
 private:
 	int m_size;
@@ -43,7 +44,7 @@ public:
 	// Get visited coordinates
 	void getCoord(std::vector<std::pair<int,int>>& coordinates) const;
 	// Display content 
-	bool display(sf::RenderWindow& window);
+	bool display(std::shared_ptr<sf::RenderWindow> window) override;
 	void setGrid(std::shared_ptr<Grid> grid);
 };
 

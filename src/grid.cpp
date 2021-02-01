@@ -3,9 +3,9 @@
 #include <random>
 #include <logging.hpp>
 
-Grid::Grid(int size, const sf::RenderWindow& window):
+Grid::Grid(int size, const std::shared_ptr<sf::RenderWindow> window):
 m_size(size),
-m_window(window),
+m_sp_window(window),
 m_outline(sf::Quads, 4*Grid::q_s),
 m_quads(sf::Quads, size*size*Grid::q_s),
 m_no_walls(size*(size-1)),  // Total walls on vertical/horizontal
@@ -30,8 +30,8 @@ m_old_y(0)
 
 // Create window's outline from 4 vertices
 void Grid::createOutline(){
-    int win_w = m_window.getSize().x;
-    int win_h = m_window.getSize().y;
+    int win_w = m_sp_window->getSize().x;
+    int win_h = m_sp_window->getSize().y;
     // Top line
     m_outline[0] = sf::Vector2f(0,0); //top-left
     m_outline[1] = sf::Vector2f(win_w,0); // top-right
@@ -140,8 +140,8 @@ void Grid::createWalls(){
     }
 
     // Create walls as row and columns 
-    int win_x = m_window.getSize().x;
-    int win_y = m_window.getSize().y;
+    int win_x = m_sp_window->getSize().x;
+    int win_y = m_sp_window->getSize().y;
     cnt = 0;
     for(int i=1;i<m_size;i++){
         m_row_walls[cnt].position   = sf::Vector2f(m_outline_w, m_outline_w+m_sqr_h*i-m_thick/2);
@@ -259,8 +259,8 @@ void Grid::setSize(const int size){
     // m_removed_walls.resize(m_no_walls*Grid::q_s);
     m_outline_w = 4; // pixels
 
-    int win_size_x = m_window.getSize().x - 2*m_outline_w;
-    int win_size_y = m_window.getSize().y - 2*m_outline_w;
+    int win_size_x = m_sp_window->getSize().x - 2*m_outline_w;
+    int win_size_y = m_sp_window->getSize().y - 2*m_outline_w;
     
     m_sqr_w = static_cast<int>(win_size_x / size);
     m_sqr_h = static_cast<int>(win_size_y / size);
@@ -275,7 +275,7 @@ void Grid::setSize(const int size){
         std::cout << "WINDOW DIMENSSIONS: \n";
         std::cout << "m_sqr_w = " << m_sqr_w << " m_sqr_h= " << m_sqr_h << std::endl;
         std::cout << "win_size_x = " << win_size_x << " win_size_y= " << win_size_y << std::endl;
-        std::cout << "m_window.getSize().x = " << m_window.getSize().x 
+        std::cout << "m_sp_window->getSize().x = " << m_sp_window->getSize().x 
                     << " m_outline_w= " << m_outline_w << std::endl;
     }
 }

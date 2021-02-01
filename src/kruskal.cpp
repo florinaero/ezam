@@ -117,28 +117,28 @@ std::vector<std::pair<int,int>> Kruskal::getTree() const {
     return m_tree;
 }
 
-bool Kruskal::display(sf::RenderWindow& window) {
+bool Kruskal::display(std::shared_ptr<sf::RenderWindow> window) {
     std::vector<std::pair<int,int>>::const_iterator it;
     sf::Event event;
-    
+    long wait_time = 10;
     for(it=m_tree.begin();it!=m_tree.end();++it){
         // Watch for events
-        while (window.pollEvent(event)){
+        while (window->pollEvent(event)){
             if (event.type == sf::Event::Closed){
-                window.close();
+                window->close();
             }
         }
         m_grid->removeWall(it->first, it->second, sf::Color::Green);
         markCells(it->first, it->second, sf::Color::Red, m_grid);
-        window.draw(*this); 
+        window->draw(*this); 
         
-        window.display();
-        std::this_thread::sleep_for(std::chrono::milliseconds{10}); 
+        window->display();
+        std::this_thread::sleep_for(std::chrono::milliseconds{wait_time}); 
           
         markCells(it->first, it->second, sf::Color::Green, m_grid);
-        window.draw(*this); 
-        window.display();
-        std::this_thread::sleep_for(std::chrono::milliseconds{10}); 
+        window->draw(*this); 
+        window->display();
+        std::this_thread::sleep_for(std::chrono::milliseconds{wait_time}); 
     }
     return false;
 }

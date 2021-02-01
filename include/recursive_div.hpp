@@ -10,9 +10,10 @@
 #include <utility>
 #include <memory>
 #include <stack>
-#include "grid.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "grid.hpp"
+#include "utils.hpp"
 
 class Coord{
  public:   
@@ -50,13 +51,14 @@ struct EmptyWall{
    {};
 };
 
-class RecursiveDiv : public sf::Drawable{
- public:
-   RecursiveDiv(std::shared_ptr<Grid> sp_grid, sf::RenderWindow& window);
+class RecursiveDiv : public sf::Drawable, public utils::ObjectMaze 
+{
+public:
+   RecursiveDiv(std::shared_ptr<Grid> sp_grid);
    ~RecursiveDiv();
-   bool display();
- private:
-   sf::RenderWindow& m_window;
+   bool display(std::shared_ptr<sf::RenderWindow> window) override;
+private:
+   std::shared_ptr<sf::RenderWindow> m_window;
    sf::VertexBuffer m_vert_walls;
    sf::VertexBuffer m_horz_walls;
    sf::VertexBuffer m_walls;
@@ -73,5 +75,6 @@ class RecursiveDiv : public sf::Drawable{
    int chooseOrientation(int width, int height);
    void split(int old_wid, int old_hgt, int width, int height);
    void showWall();
+   void setWindow(sf::RenderWindow& window);
 };
 #endif

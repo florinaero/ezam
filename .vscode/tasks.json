@@ -23,6 +23,8 @@
                 "obj\\",
                 "/INCREMENTAL",
                 "/link",
+                "/SUBSYSTEM:WINDOWS", // Remove console
+                "/verbose:lib",
                 "/LIBPATH:C:\\_Personal\\libs\\sfml_build\\lib",
                 "sfml-network.lib",
                 "sfml-graphics.lib",

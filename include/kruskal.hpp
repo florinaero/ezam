@@ -4,13 +4,14 @@
 #include <vector>
 #include <utility>
 #include <memory>
-#include "grid.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "grid.hpp"
+#include "utils.hpp"
 
 
 
-class Kruskal : public sf::Drawable
+class Kruskal : public sf::Drawable, public utils::ObjectMaze
 {
 public: 
     // ctor
@@ -20,7 +21,7 @@ public:
     // Return connected cells(spanning tree)
     std::vector<std::pair<int,int>> getTree() const;   
     // Display maze based on Kruskal alg. and return false when finished
-    bool display(sf::RenderWindow& window);
+    bool display(std::shared_ptr<sf::RenderWindow> window) override;
     void setGrid(std::shared_ptr<Grid> grid);
 
 private:    

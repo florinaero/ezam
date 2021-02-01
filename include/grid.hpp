@@ -10,7 +10,7 @@ class Grid : public sf::Drawable
 {
 public:
     Grid();
-    Grid(int size, const sf::RenderWindow& window);
+    Grid(int size, const std::shared_ptr<sf::RenderWindow> sp_window);
     // Set quads color based on grid coordinates
     void setColorQuad(const int x, const int y, const sf::Color color_code);
     
@@ -74,7 +74,7 @@ private:
         
     sf::Sprite m_sprite;
     sf::Texture m_texture;
-    const sf::RenderWindow& m_window;
+    const std::shared_ptr<sf::RenderWindow> m_sp_window;
     int m_size;
     int m_thick;
     int m_old_x; 

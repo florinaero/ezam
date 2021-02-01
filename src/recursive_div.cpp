@@ -2,13 +2,11 @@
 #include <chrono>
 #include <iostream>
 #include "recursive_div.hpp"
-#include "utils.hpp"
 #include "logging.hpp"
 
-RecursiveDiv::RecursiveDiv(std::shared_ptr<Grid> sp_grid, sf::RenderWindow& window)
+RecursiveDiv::RecursiveDiv(std::shared_ptr<Grid> sp_grid)
     : m_walls(sf::Quads),
-      m_sp_grid(sp_grid),
-      m_window(window)
+      m_sp_grid(sp_grid)
 {}
 
 RecursiveDiv::~RecursiveDiv(){}
@@ -19,7 +17,8 @@ void RecursiveDiv::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(m_vect_walls.data(), m_vect_walls.size(),sf::Quads, states);
 }
 
-bool RecursiveDiv::display(){
+bool RecursiveDiv::display(std::shared_ptr<sf::RenderWindow> window){
+    m_window = window;
     m_sp_grid->setColorAllQuads(sf::Color::Yellow);
     // Start displying
     split(0, 0, m_sp_grid->getSize(), m_sp_grid->getSize()); 
@@ -168,12 +167,6 @@ void RecursiveDiv::showWall(){
     m_vect_walls.end()[-3].color = sf::Color(utils::clr::green);        
     m_vect_walls.end()[-4].color = sf::Color(utils::clr::green);            
     
-    
-    // m_window.clear(sf::Color::White);
-    // m_window.draw(*this);
-    // m_window.display();
-    // std::this_thread::sleep_for(std::chrono::milliseconds{50});   
-    
     // Horizontal empty wall
     if(hgt==0){
         x = m_emptyWall_horz.back().first;
@@ -200,8 +193,8 @@ void RecursiveDiv::showWall(){
     m_vect_walls.end()[-4].color = sf::Color(sf::Color::Yellow);                
 
     // m_window.clear(sf::Color::White);
-    m_window.draw(*this);
-    m_window.display();
+    m_window->draw(*this);
+    m_window->display();
     std::this_thread::sleep_for(std::chrono::milliseconds{50});     
 }
 
