@@ -1,5 +1,0 @@
--> grid
--> coloreaza cele doua celule selectate cu rosu
--> timp asteptare 100ms
--> coloreaza cele doua celule si perete dintre ele cu alb
--> timp asteptare 100ms

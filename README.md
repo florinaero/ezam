@@ -6,3 +6,6 @@ Algorithms used for generation:
 * Krusk
 * Recursive division
 
+# Demo 
+![](ezam_dem0_23_02_21.gif)
+
