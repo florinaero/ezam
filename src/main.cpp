@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vld.h>
 #include "graphic.hpp"
 #include "maze.hpp"
 #include "control.hpp"
@@ -12,7 +11,7 @@
 using namespace std;
 
 int main (){
-	int size = 30;
+	int size = 20;
 
 	// Construct render window
 	Control product{1000, 1000, size};

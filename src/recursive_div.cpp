@@ -155,6 +155,7 @@ void RecursiveDiv::showWall(){
     int h_quad = m_sp_grid->getSqrH();
     int out = m_sp_grid->getOutlineW();
     int tck = m_sp_grid->getWallThick()/2;
+    int wait_time = 10;
 
     // Entire Wall 
     m_vect_walls.push_back(sf::Vertex(sf::Vector2f(x*w_quad+out,y*h_quad+out)));
@@ -195,7 +196,7 @@ void RecursiveDiv::showWall(){
     // m_window.clear(sf::Color::White);
     m_window->draw(*this);
     m_window->display();
-    std::this_thread::sleep_for(std::chrono::milliseconds{50});     
+    std::this_thread::sleep_for(std::chrono::milliseconds(wait_time));     
 }
 
 // Choose direction of split considering actual size, avoid split on long edge

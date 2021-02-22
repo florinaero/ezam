@@ -32,8 +32,7 @@
                 "sfml-main.lib",
                 "sfml-audio.lib",
                 "sfml-system.lib",
-                "/LIBPATH:C:\\Program Files (x86)\\Visual Leak Detector\\lib\\Win32",
-                "vld.lib"
+                "/LIBPATH:C:\\Program Files (x86)\\Visual Leak Detector\\lib\\Win32"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
