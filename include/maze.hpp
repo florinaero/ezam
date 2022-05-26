@@ -12,7 +12,7 @@
 #include "grid.hpp"
 #include "utils.hpp"
 
-class Maze : public sf::Drawable, public utils::ObjectMaze 
+class Maze : public sf::Drawable, public utils::ObjectMaze
 {
 private:
 	int m_size;
@@ -20,14 +20,14 @@ private:
 	int m_old_x;
 	int m_old_y;
 	std::vector<std::vector<int>> m_graph;
-	std::deque<std::pair<int,int>> m_que_visit;
-	std::vector<std::pair<int,int>> m_coord;
-	std::unordered_map<int,int> m_visited_cells;
+	std::deque<std::pair<int, int>> m_que_visit;
+	std::vector<std::pair<int, int>> m_coord;
+	std::unordered_map<int, int> m_visited_cells;
 	Graphic m_graph_out;
 	std::shared_ptr<Grid> m_grid;
 	sf::VertexArray m_head_qs;
 	sf::VertexArray m_removed_walls;
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	void moveHead(const int x, const int y);
 
 public:
@@ -38,14 +38,14 @@ public:
 	// Build maze based on depth first search using recursion
 	void buildDFS(int x, int y);
 	// Generate coord of next block
-	bool generate(int &x, int&y);
-	// Display maze 
+	bool generate(int &x, int &y);
+	// Display maze
 	void displayMaze();
 	// Get visited coordinates
-	void getCoord(std::vector<std::pair<int,int>>& coordinates) const;
-	// Display content 
+	void getCoord(std::vector<std::pair<int, int>> &coordinates) const;
+	// Display content
 	bool display(std::shared_ptr<sf::RenderWindow> window) override;
 	void setGrid(std::shared_ptr<Grid> grid);
 };
 
-#endif 
+#endif

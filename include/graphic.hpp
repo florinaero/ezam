@@ -5,9 +5,10 @@
 #include <string>
 #include <vector>
 
-class Graphic{
+class Graphic
+{
 private:
-	std::string m_dataFile;	// Used to store content of file
+	std::string m_dataFile; // Used to store content of file
 public:
 	int m_size;
 	std::fstream m_out_file;
@@ -15,7 +16,7 @@ public:
 	std::vector<std::vector<int>> m_horz_walls;
 	std::vector<std::vector<int>> m_final_horz;
 	std::vector<std::vector<int>> m_final_vert;
-	std::pair<int,int> m_exit;
+	std::pair<int, int> m_exit;
 	// Ctor
 	Graphic(int size);
 
